@@ -1,8 +1,6 @@
 package com.tokopedia.devicetracker.ui.main.adapter;
 
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.support.annotation.ColorInt;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +13,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.tokopedia.devicetracker.R;
+import com.tokopedia.devicetracker.app.MainApp;
 import com.tokopedia.devicetracker.database.model.DeviceData;
 
 import java.util.ArrayList;
@@ -32,8 +31,13 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
     private List<DeviceData> deviceDataList = new ArrayList<>();
     private OnItemClickListener onItemClickListener;
 
+
+    private MainApp application;
+    private int selectedItem = 0;
+
     public DeviceListAdapter(OnItemClickListener listener, List<DeviceData> deviceDataList) {
         this.deviceDataList = deviceDataList;
+        this.application = MainApp.getInstance();
         this.onItemClickListener = listener;
     }
 
@@ -51,16 +55,15 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (deviceDataList.get(position).isBorrowed()) {
-            holder.setColor(R.drawable.bg_borrowed_device);
             holder.setBorrowedTextColor();
         } else {
-            holder.setColor(R.drawable.bg_available_device);
             holder.setNormalTextColor();
         }
         holder.tvName.setText(deviceDataList.get(position).getDeviceName().toUpperCase());
         holder.tvModel.setText(deviceDataList.get(position).getDeviceModel().toUpperCase());
         holder.tvNumber.setText(deviceDataList.get(position).getDeviceNumber().toUpperCase());
         ImageLoader.getInstance().displayImage("assets://" + deviceDataList.get(position).getDevicePicAsset(), holder.ivPic, getDisplayImage());
+        holder.view.setSelected(position == selectedItem);
     }
 
     @Override
@@ -70,6 +73,15 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
 
     public DeviceData getItem(int position) {
         return deviceDataList.get(position);
+    }
+
+    public void renderItemView(DeviceData newDeviceData) {
+        for (int i = 0; i < deviceDataList.size(); i++) {
+            if (deviceDataList.get(i).getId() == newDeviceData.getId()) {
+                deviceDataList.get(i).setNewData(newDeviceData);
+                notifyItemChanged(i);
+            }
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -86,6 +98,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
 
         public ViewHolder(View itemView) {
             super(itemView);
+            itemView.setBackgroundResource(R.drawable.bg_available_device);
             this.view = itemView;
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
@@ -93,23 +106,23 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
 
         @Override
         public void onClick(View v) {
-            onItemClickListener.onItemClick(v, getAdapterPosition());
-        }
-
-        public void setColor(int bg) {
-            itemView.setBackgroundResource(bg);
+            onItemClickListener.onDeviceListItemClicked(v, getAdapterPosition());
+            notifyItemChanged(selectedItem);
+            selectedItem = getAdapterPosition();
+            notifyItemChanged(selectedItem);
         }
 
         public void setBorrowedTextColor() {
-            tvName.setTextColor(Color.parseColor("#B6B6B6"));
-            tvNumber.setTextColor(Color.parseColor("#B6B6B6"));
-            tvModel.setTextColor(Color.parseColor("#B6B6B6"));
+            tvName.setTextColor(application.getResources().getColor(R.color.divider));
+            tvNumber.setTextColor(application.getResources().getColor(R.color.divider));
+            tvModel.setTextColor(application.getResources().getColor(R.color.divider));
         }
 
         public void setNormalTextColor() {
-            tvName.setTextColor(Color.parseColor("#212121"));
-            tvNumber.setTextColor(Color.parseColor("#727272"));
-            tvModel.setTextColor(Color.parseColor("#727272"));
+            tvName.setTextColor(application.getResources().getColor(R.color.primary_text));
+            tvNumber.setTextColor(application.getResources().getColor(R.color.secondary_text));
+            tvModel.setTextColor(application.getResources().getColor(R.color.secondary_text));
+
         }
     }
 
@@ -125,6 +138,6 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
     }
 
     public interface OnItemClickListener {
-        void onItemClick(View view, int position);
+        void onDeviceListItemClicked(View view, int position);
     }
 }

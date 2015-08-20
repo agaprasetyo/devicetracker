@@ -35,15 +35,16 @@ public class MainActivityPresenter extends Presenter {
 
     }
 
-    public void sendDeviceDataToDetailFragment(FragmentManager fragmentManager, DeviceData deviceData) {
-        ((DeviceDetailFragment) fragmentManager.findFragmentById(R.id.container_detail)).refreshDeviceStatus(deviceData);
-    }
-
-    public void sendDeviceDataToDetailActivity(MainActivity mainActivity, DeviceData deviceData) {
-        Intent intent = new Intent(mainActivity,
-                DeviceDetailActivity.class);
-        intent.putExtra(DeviceDetailActivity.EXTRA_DEVICE_DATA, deviceData);
-        mainActivity.startActivity(intent);
+    public void processRenderDeviceData(MainActivity mainActivity, FragmentManager fragmentManager, DeviceData deviceData) {
+        DeviceDetailFragment fragment = (DeviceDetailFragment) fragmentManager.findFragmentById(R.id.container_detail);
+        if (fragment != null && fragment.isInLayout()) {
+            ((DeviceDetailFragment) fragmentManager.findFragmentById(R.id.container_detail)).refreshDeviceStatus(deviceData);
+        } else {
+            Intent intent = new Intent(mainActivity,
+                    DeviceDetailActivity.class);
+            intent.putExtra(DeviceDetailActivity.EXTRA_DEVICE_DATA, deviceData);
+            mainActivity.startActivity(intent);
+        }
     }
 
     public interface View {

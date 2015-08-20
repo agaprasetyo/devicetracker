@@ -54,6 +54,11 @@ public class DeviceDataService extends BaseService<DeviceData> {
 
     @Override
     public DeviceData getData(int id) {
-        return null;
+        try {
+            return deviceDataIntegerDao.queryForId(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

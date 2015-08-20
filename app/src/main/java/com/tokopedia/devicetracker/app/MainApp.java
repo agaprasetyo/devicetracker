@@ -1,5 +1,7 @@
 package com.tokopedia.devicetracker.app;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.multidex.MultiDexApplication;
 
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
@@ -9,6 +11,9 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.utils.StorageUtils;
 import com.tokopedia.devicetracker.database.BundleService;
+import com.tokopedia.devicetracker.di.component.DaggerMainAppComponent;
+import com.tokopedia.devicetracker.di.component.MainAppComponent;
+import com.tokopedia.devicetracker.di.module.ApplicationModule;
 
 import java.io.File;
 
@@ -20,6 +25,7 @@ public class MainApp extends MultiDexApplication {
     private static MainApp mInstance;
     private ImageLoader mImageLoader;
     private BundleService dbService;
+    private MainAppComponent mainAppComponent;
 
     public static synchronized MainApp getInstance() {
         return mInstance;
@@ -28,9 +34,22 @@ public class MainApp extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        mainAppComponent = DaggerMainAppComponent.builder()
+                .applicationModule(new ApplicationModule(this))
+                .build();
+        // mainAppComponent.inject(this);
+        mainAppComponent.inject(this);
         mInstance = this;
         initialImageLoader();
         initialDbService();
+    }
+
+    public MainAppComponent getComponent(Context context) {
+        return ((MainApp) context.getApplicationContext()).mainAppComponent;
+    }
+
+    public static MainApp from(@NonNull Context context) {
+        return (MainApp) context.getApplicationContext();
     }
 
     private void initialDbService() {

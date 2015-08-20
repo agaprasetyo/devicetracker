@@ -57,4 +57,9 @@ public class DeviceDetailActivity extends BaseActivity implements DeviceDetailFr
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void renderListItem(DeviceData deviceId) {
+
+    }
 }

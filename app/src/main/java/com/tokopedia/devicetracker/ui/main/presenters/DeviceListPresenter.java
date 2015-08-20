@@ -20,7 +20,7 @@ public class DeviceListPresenter extends Presenter {
     @Override
     public void initialize() {
         if (view.isReady()) {
-            view.initialView();
+            view.setAttributeVar();
             view.populateListView();
         }
     }
@@ -47,8 +47,7 @@ public class DeviceListPresenter extends Presenter {
 
         void populateListView();
 
-        void initialView();
+        void setAttributeVar();
 
-        void onDeviceListItemClicked(DeviceData deviceData);
     }
 }

@@ -1,20 +1,27 @@
 package com.tokopedia.devicetracker.ui.main.fragment;
 
 import android.app.Activity;
+import android.graphics.Camera;
+import android.hardware.camera2.CameraDevice;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.zxing.Result;
 import com.tokopedia.devicetracker.R;
+import com.tokopedia.devicetracker.app.MainApp;
 import com.tokopedia.devicetracker.database.model.BorrowData;
 import com.tokopedia.devicetracker.database.model.DeviceData;
 import com.tokopedia.devicetracker.ui.BaseFragment;
 import com.tokopedia.devicetracker.ui.main.presenters.DeviceDetailPresenter;
+
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -26,10 +33,8 @@ public class DeviceDetailFragment extends BaseFragment implements DeviceDetailPr
     private DeviceData deviceData;
 
     private OnFragmentInteractionListener mListener;
-    private DeviceDetailPresenter presenter;
+    private DeviceDetailPresenter presenter = new DeviceDetailPresenter(this);
 
-    //    @Bind(R.id.qrcode_view)
-//    QRCodeReaderView qrCodeReaderView;
     @Bind(R.id.et_employee_name_1)
     EditText etBorrow;
     @Bind(R.id.btn_borrow)
@@ -42,6 +47,10 @@ public class DeviceDetailFragment extends BaseFragment implements DeviceDetailPr
     RelativeLayout layoutBack;
     @Bind(R.id.zxing_view)
     ZXingScannerView zXingScannerView;
+    @Bind(R.id.tv_desc_borrow_data)
+    TextView tvBorrowData;
+    @Bind(R.id.layout_progress)
+    RelativeLayout layoutProgress;
 
     public static DeviceDetailFragment newInstance(DeviceData deviceData) {
         DeviceDetailFragment fragment = new DeviceDetailFragment();
@@ -54,11 +63,23 @@ public class DeviceDetailFragment extends BaseFragment implements DeviceDetailPr
     public DeviceDetailFragment() {
     }
 
+    @OnClick(R.id.btn_borrow)
+    public void borrow() {
+        presenter.registrateBorrowData(deviceData);
+    }
+
+    @OnClick(R.id.btn_back)
+    public void back() {
+        presenter.unregistrateBorrowData(deviceData);
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             deviceData = getArguments().getParcelable(ARG_PARAM_DEVICE_DATA);
+        } else {
+            deviceData = MainApp.getInstance().getDbService().getDeviceData().getData(1);
         }
     }
 
@@ -70,10 +91,10 @@ public class DeviceDetailFragment extends BaseFragment implements DeviceDetailPr
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        //   qrCodeReaderView.setOnQRCodeReadListener(this);
-        presenter = new DeviceDetailPresenter(this);
         presenter.initialize();
+        refreshDeviceStatus(deviceData);
     }
+
 
     @Override
     public void onAttach(Activity activity) {
@@ -89,13 +110,13 @@ public class DeviceDetailFragment extends BaseFragment implements DeviceDetailPr
     @Override
     public void onResume() {
         super.onResume();
-        startQRCodeScanner();
+        presenter.resume();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        stopQRCodeScanner();
+        presenter.pause();
     }
 
     @Override
@@ -130,42 +151,31 @@ public class DeviceDetailFragment extends BaseFragment implements DeviceDetailPr
     }
 
     @Override
-    public void showInProcessResult() {
-
-    }
-
-    @Override
     public void stopQRCodeScanner() {
-        //   qrCodeReaderView.getCameraManager().stopPreview();
         zXingScannerView.stopCamera();
     }
 
     @Override
     public void startQRCodeScanner() {
-        //   qrCodeReaderView.getCameraManager().startPreview();
         zXingScannerView.setResultHandler(this);
         zXingScannerView.startCamera(1);
     }
 
     @Override
     public void deviceIsBorrowed(BorrowData borrowData) {
-        layoutBack.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_out));
+        tvBorrowData.setText("Lagi dipinjam sama " + this.deviceData.getBorrowData().getBorrowerData().getName() + "\n"
+                + new SimpleDateFormat("EEEE, dd MMMM yyyy", new Locale("in_ID")).format(this.deviceData.getBorrowData().getTime()));
         layoutBack.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void deviceIsAvailable() {
-        layoutBack.startAnimation(AnimationUtils.loadAnimation(getActivity(), android.R.anim.fade_in));
         layoutBack.setVisibility(View.GONE);
     }
 
     @Override
     public void handleResult(Result result) {
         presenter.processQRResult(result.toString());
-    }
-
-    public interface OnFragmentInteractionListener {
-
     }
 
     public void refreshDeviceStatus(DeviceData deviceData) {
@@ -188,15 +198,30 @@ public class DeviceDetailFragment extends BaseFragment implements DeviceDetailPr
         etBack.setText(qrResult);
     }
 
-    @OnClick(R.id.btn_borrow)
-    public void borrow() {
-        presenter.registrateBorrowData(deviceData);
+    @Override
+    public void renderDeviceList(DeviceData id) {
+        mListener.renderListItem(id);
     }
 
+    @Override
+    public void showProgressLayout() {
+        layoutProgress.setVisibility(View.VISIBLE);
+    }
 
-    @OnClick(R.id.btn_back)
-    public void back() {
-        presenter.unregistrateBorrowData(deviceData);
+    @Override
+    public void hideProgressLayout() {
+        layoutProgress.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void resetContentView() {
+        tvBorrowData.setText("");
+        etBack.setText("");
+        etBorrow.setText("");
+    }
+
+    public interface OnFragmentInteractionListener {
+        void renderListItem(DeviceData deviceId);
     }
 
 }

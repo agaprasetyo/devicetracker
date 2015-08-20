@@ -33,38 +33,36 @@ public class DeviceDetailPresenter extends Presenter implements OnGetEmployeeFin
 
     @Override
     public void resume() {
-
+        view.startQRCodeScanner();
     }
 
     @Override
     public void pause() {
-
-    }
-
-    public void requestEmployeeData(String qrResult) {
         view.stopQRCodeScanner();
-        qrCodeInteractor.requestEmployeeData(qrResult);
     }
 
     @Override
     public void onSuccess(BorrowerData borrowerData) {
+        this.borrowerData = borrowerData;
         view.startQRCodeScanner();
         view.showSuccessResult(borrowerData.getName());
-        this.borrowerData = borrowerData;
+        view.hideProgressLayout();
     }
 
     @Override
     public void onError(String errorMessage) {
         view.startQRCodeScanner();
+        view.hideProgressLayout();
         view.showErrorResult(errorMessage);
     }
 
     @Override
     public void onProcess() {
-        view.showInProcessResult();
+        view.showProgressLayout();
     }
 
     public void analyzeDeviceData(DeviceData deviceData) {
+        view.resetContentView();
         if (deviceData.isBorrowed()) {
             view.deviceIsBorrowed(deviceData.getBorrowData());
         } else {
@@ -74,22 +72,27 @@ public class DeviceDetailPresenter extends Presenter implements OnGetEmployeeFin
 
     public void registrateBorrowData(DeviceData deviceData) {
         if (borrowerData != null) {
+            BorrowData borrowData = new BorrowData();
+            borrowData.setBorrowerData(borrowerData);
+            borrowData.setTime(new Date().getTime());
             MainApp.getInstance().getDbService().getBorrowerData().saveData(borrowerData);
-            BorrowData borrowData = new BorrowData(new Date().getTime(), borrowerData);
             MainApp.getInstance().getDbService().getBorrowData().saveData(borrowData);
             deviceData.setBorrowed(true);
             deviceData.setBorrowData(borrowData);
             MainApp.getInstance().getDbService().getDeviceData().saveData(deviceData);
             view.refreshDeviceStatus(deviceData);
+            view.renderDeviceList(deviceData);
         } else {
             view.showToastMessage("Scan barcode dulu brooo!");
         }
     }
 
     public void processQRResult(String qrResult) {
+        view.resetContentView();
         if (view.isBorrowedDevice()) {
             this.urlEmployee = qrResult;
             view.showUrlEmployee(qrResult);
+            view.startQRCodeScanner();
         } else {
             if (qrResult.contains("https://www.tokopedia.com/team"))
                 qrCodeInteractor.requestEmployeeData(qrResult);
@@ -121,8 +124,6 @@ public class DeviceDetailPresenter extends Presenter implements OnGetEmployeeFin
 
         void showErrorResult(String employeeName);
 
-        void showInProcessResult();
-
         void stopQRCodeScanner();
 
         void startQRCodeScanner();
@@ -138,5 +139,13 @@ public class DeviceDetailPresenter extends Presenter implements OnGetEmployeeFin
         boolean isBorrowedDevice();
 
         void showUrlEmployee(String qrResult);
+
+        void renderDeviceList(DeviceData id);
+
+        void showProgressLayout();
+
+        void hideProgressLayout();
+
+        void resetContentView();
     }
 }

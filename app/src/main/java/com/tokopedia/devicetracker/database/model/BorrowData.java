@@ -18,7 +18,7 @@ public class BorrowData implements Parcelable {
     private int id;
     @DatabaseField(columnName = DbContract.BorrowData.TIME_OF_BORROW)
     private long time;
-    @DatabaseField(foreign = true, columnName = DbContract.BorrowData.BORROWER)
+    @DatabaseField(foreign = true, columnName = DbContract.BorrowData.BORROWER, foreignAutoCreate = true, foreignAutoRefresh = true)
     private BorrowerData borrowerData;
 
     public BorrowData() {

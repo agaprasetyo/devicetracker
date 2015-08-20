@@ -23,7 +23,7 @@ public class DeviceListFragment extends BaseFragment implements DeviceListPresen
     RecyclerView recyclerView;
 
     private OnFragmentInteractionListener mListener;
-    private DeviceListPresenter presenter;
+    private DeviceListPresenter presenter = new DeviceListPresenter(this);
 
     private DeviceListAdapter adapter;
 
@@ -44,7 +44,6 @@ public class DeviceListFragment extends BaseFragment implements DeviceListPresen
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        presenter = new DeviceListPresenter(this);
         presenter.initialize();
     }
 
@@ -52,7 +51,6 @@ public class DeviceListFragment extends BaseFragment implements DeviceListPresen
     protected int getFragmentLayout() {
         return R.layout.fragment_device_list;
     }
-
 
     @Override
     public void onAttach(Activity activity) {
@@ -90,25 +88,24 @@ public class DeviceListFragment extends BaseFragment implements DeviceListPresen
     }
 
     @Override
-    public void initialView() {
+    public void setAttributeVar() {
         adapter = new DeviceListAdapter(this, new ArrayList<DeviceData>());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
     }
 
     @Override
-    public void onDeviceListItemClicked(DeviceData deviceData) {
-
+    public void onDeviceListItemClicked(View view, int position) {
+        mListener.renderDetailDeviceData(adapter.getItem(position));
     }
 
-    @Override
-    public void onItemClick(View view, int position) {
-        mListener.updateDetailFragment(adapter.getItem(position));
+    public void renderItemList(DeviceData deviceId) {
+        adapter.renderItemView(deviceId);
     }
 
 
     public interface OnFragmentInteractionListener {
-        void updateDetailFragment(DeviceData deviceData);
+        void renderDetailDeviceData(DeviceData deviceData);
     }
 
 }

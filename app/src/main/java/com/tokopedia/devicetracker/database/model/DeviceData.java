@@ -19,7 +19,7 @@ public class DeviceData extends Device {
     private int id;
     @DatabaseField(columnName = DbContract.DeviceData.BORROWED)
     private boolean borrowed = false;
-    @DatabaseField(foreign = true, columnName = DbContract.DeviceData.BORROW_DATA)
+    @DatabaseField(foreign = true, columnName = DbContract.DeviceData.BORROW_DATA, foreignAutoCreate = true, foreignAutoRefresh = true)
     private BorrowData borrowData;
 
     public DeviceData() {
@@ -89,4 +89,14 @@ public class DeviceData extends Device {
             return new DeviceData[size];
         }
     };
+
+    public void setNewData(DeviceData newDeviceData) {
+        this.id = newDeviceData.getId();
+        this.borrowed = newDeviceData.isBorrowed();
+        this.borrowData = newDeviceData.getBorrowData();
+        this.deviceName = newDeviceData.getDeviceName();
+        this.deviceDesc = newDeviceData.getDeviceDesc();
+        this.deviceNumber = newDeviceData.getDeviceNumber();
+        this.deviceModel = newDeviceData.getDeviceModel();
+    }
 }
