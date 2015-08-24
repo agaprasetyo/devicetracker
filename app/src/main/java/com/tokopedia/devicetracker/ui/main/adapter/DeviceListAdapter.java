@@ -84,6 +84,12 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
         }
     }
 
+    public void setInitialDeviceSelected(int i) {
+        notifyItemChanged(selectedItem);
+        selectedItem = i;
+        notifyItemChanged(selectedItem);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private View view;
         @Bind(R.id.iv_pic)
@@ -106,7 +112,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
 
         @Override
         public void onClick(View v) {
-            onItemClickListener.onDeviceListItemClicked(v, getAdapterPosition());
+            onItemClickListener.onDeviceListItemClicked(getAdapterPosition());
             notifyItemChanged(selectedItem);
             selectedItem = getAdapterPosition();
             notifyItemChanged(selectedItem);
@@ -138,6 +144,6 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
     }
 
     public interface OnItemClickListener {
-        void onDeviceListItemClicked(View view, int position);
+        void onDeviceListItemClicked(int position);
     }
 }

@@ -7,18 +7,13 @@ import com.tokopedia.devicetracker.database.model.TrackingData;
 /**
  * Created by Angga.Prasetiyo on 24/08/2015.
  */
-public interface TrackingDataInteractor {
-
+public interface UserTrackingDataInteractor {
 
     void trackingBorrowDevice(DeviceData deviceId, PersonData personData);
 
-    void trackingReturnDevice(DeviceData deviceId, PersonData personData);
+    void trackingReturnDevice(DeviceData deviceData, PersonData personData);
 
-    void trackingReturnDevice(DeviceData deviceId, String url);
+    void trackingReturnDevice(DeviceData deviceData, String urlPerson);
 
-    void trackingAddDevice(DeviceData deviceData, PersonData personData);
-
-    void trackingRemoveDevice(DeviceData deviceData, PersonData personData);
-
-
+    TrackingData getLastTrackingDataBydevice(DeviceData deviceData);
 }

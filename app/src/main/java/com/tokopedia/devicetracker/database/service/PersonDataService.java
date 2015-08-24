@@ -2,6 +2,7 @@ package com.tokopedia.devicetracker.database.service;
 
 import android.content.Context;
 
+import com.j256.ormlite.dao.Dao;
 import com.tokopedia.devicetracker.database.model.PersonData;
 
 import java.sql.SQLException;
@@ -13,9 +14,16 @@ import java.util.List;
  */
 public class PersonDataService extends BaseService<PersonData> {
     private static final String TAG = PersonDataService.class.getSimpleName();
+    private final Dao<PersonData, Integer> personDataIntegerDao;
 
     public PersonDataService(Context context) {
         super(context);
+        try {
+            personDataIntegerDao = dbHelper.getPersonDataIntegerDao();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

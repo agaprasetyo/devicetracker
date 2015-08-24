@@ -1,40 +1,38 @@
 package com.tokopedia.devicetracker.ui.main.presenters;
 
-import com.tokopedia.devicetracker.app.MainApp;
-import com.tokopedia.devicetracker.database.DbContract;
 import com.tokopedia.devicetracker.database.model.DeviceData;
 import com.tokopedia.devicetracker.database.model.PersonData;
 import com.tokopedia.devicetracker.database.model.TrackingData;
-import com.tokopedia.devicetracker.ui.interactors.OnGetEmployeeFinishedListener;
+import com.tokopedia.devicetracker.ui.interactors.OnRequestPersonDataFinishedListener;
 import com.tokopedia.devicetracker.ui.interactors.OnTrackingDataFinishedListener;
 import com.tokopedia.devicetracker.ui.interactors.QRCodeInteractor;
 import com.tokopedia.devicetracker.ui.interactors.QRCodeInteractorImpl;
-import com.tokopedia.devicetracker.ui.interactors.TrackingDataInteractor;
-import com.tokopedia.devicetracker.ui.interactors.TrackingDataInteractorImpl;
-import com.tokopedia.devicetracker.ui.main.activity.MainActivity;
+import com.tokopedia.devicetracker.ui.interactors.UserTrackingDataInteractor;
+import com.tokopedia.devicetracker.ui.interactors.UserTrackingDataInteractorImpl;
 
 /**
  * Created by Angga.Prasetiyo on 18/08/2015.
  */
-public class DeviceDetailPresenter extends Presenter implements OnGetEmployeeFinishedListener, OnTrackingDataFinishedListener {
+public class DeviceDetailPresenter extends Presenter implements OnRequestPersonDataFinishedListener, OnTrackingDataFinishedListener {
     private static final String TAG = DeviceDetailPresenter.class.getSimpleName();
 
     private View view;
     private QRCodeInteractor qrCodeInteractor;
-    private TrackingDataInteractor trackingDataInteractor;
+    private UserTrackingDataInteractor trackingDataInteractor;
 
-    private String urlEmployee;
+    private String urlPerson;
     private PersonData personData;
 
     public DeviceDetailPresenter(View view) {
         this.view = view;
         this.qrCodeInteractor = new QRCodeInteractorImpl(this);
-        this.trackingDataInteractor = new TrackingDataInteractorImpl(this);
+        this.trackingDataInteractor = new UserTrackingDataInteractorImpl(this);
     }
 
     @Override
     public void initialize() {
         view.setAttributeVar();
+        view.renderDeviceDetail();
     }
 
     @Override
@@ -48,34 +46,43 @@ public class DeviceDetailPresenter extends Presenter implements OnGetEmployeeFin
     }
 
     @Override
-    public void onSuccess(PersonData personData) {
+    public void onPersonDataSuccess(PersonData personData) {
         this.personData = personData;
+        view.enableBorrowButton();
         view.startQRCodeScanner();
-        view.showSuccessResult(personData.getName());
+        view.showPersonName(personData.getName());
         view.hideProgressLayout();
+        view.showToastMessage("Hallo " + personData.getName() + ", Data Anda sudah tervalidasi. Silahkan tekan tombol pinjam.");
     }
 
     @Override
-    public void onError(String errorMessage) {
+    public void onPersonDataError(String errorMessage) {
+        view.resetContentView();
         view.startQRCodeScanner();
         view.hideProgressLayout();
-        view.showErrorResult(errorMessage);
+        view.showToastMessage(errorMessage);
     }
 
     @Override
-    public void onProcess() {
+    public void onPersonDataProcess() {
         view.showProgressLayout();
     }
 
     public void analyzeDeviceData(DeviceData deviceData) {
-        view.resetContentView();
-        this.urlEmployee = null;
-        if (deviceData.isBorrowed()) {
-            TrackingData trackingData = MainApp.getInstance().getDbService().getTrackingData().getLastBorrowDataByDevice(deviceData);
-            view.deviceIsBorrowed(trackingData);
+        resetPersonData();
+        if (deviceData != null) {
+            this.urlPerson = null;
+            view.resetContentView();
+            if (deviceData.isBorrowed()) {
+                TrackingData trackingData = trackingDataInteractor.getLastTrackingDataBydevice(deviceData);
+                view.renderDeviceIsBorrowed(trackingData);
+            } else {
+                view.renderDeviceIsAvailable();
+            }
         } else {
-            view.deviceIsAvailable();
+            view.renderDeviceNotSelected();
         }
+
 
     }
 
@@ -85,27 +92,32 @@ public class DeviceDetailPresenter extends Presenter implements OnGetEmployeeFin
         } else {
             view.showToastMessage("Scan barcode dulu brooo!");
         }
+        view.disableBorrowButtn();
     }
 
     public void processQRResult(String qrResult) {
         view.resetContentView();
-        if (view.isBorrowedDevice()) {
-            this.urlEmployee = qrResult;
-            view.startQRCodeScanner();
+        if (qrResult.contains("https://www.tokopedia.com/team")) {
+            if (view.isBorrowedDevice()) {
+                this.urlPerson = qrResult;
+                view.enableReturnButton();
+                view.startQRCodeScanner();
+            } else {
+                qrCodeInteractor.requestPersonData(qrResult);
+            }
         } else {
-            if (qrResult.contains("https://www.tokopedia.com/team"))
-                qrCodeInteractor.requestEmployeeData(qrResult);
-            else
-                view.showToastMessage("Format tidak sesuai!");
+            view.showToastMessage("Format tidak sesuai!");
+            view.startQRCodeScanner();
         }
     }
 
-    public void unregistrateBorrowData(DeviceData deviceData) {
-        if (urlEmployee != null) {
-            trackingDataInteractor.trackingReturnDevice(deviceData, urlEmployee);
+    public void returnDevice(DeviceData deviceData) {
+        if (urlPerson != null) {
+            trackingDataInteractor.trackingReturnDevice(deviceData, urlPerson);
         } else {
             view.showToastMessage("Scan dulu bro!");
         }
+        view.disableReturnButton();
     }
 
     public void resetPersonData() {
@@ -115,29 +127,13 @@ public class DeviceDetailPresenter extends Presenter implements OnGetEmployeeFin
 
     @Override
     public void onTracked(TrackingData trackingData) {
-        switch (trackingData.getActivity()) {
-            case TrackingData.ACTIVITY_BORROW:
-                view.renderDeviceList(trackingData.getDevice());
-                view.renderDeviceDetail(trackingData.getDevice());
-                break;
-            case TrackingData.ACTIVITY_RETURN:
-                view.showUrlEmployee(trackingData.getPerson().getName());
-                break;
-        }
-
+        view.renderDeviceList(trackingData.getDevice());
+        view.renderDeviceDetail(trackingData.getDevice());
     }
 
     @Override
-    public void onFailTracking(TrackingData trackingData) {
-        switch (trackingData.getActivity()) {
-            case TrackingData.ACTIVITY_BORROW:
-
-                break;
-            case TrackingData.ACTIVITY_RETURN:
-
-                view.showToastMessage("Data tidak sama dengan peminjam!");
-                break;
-        }
+    public void onFailTracking(String failMessage) {
+        view.showToastMessage(failMessage);
     }
 
     public interface View {
@@ -148,32 +144,40 @@ public class DeviceDetailPresenter extends Presenter implements OnGetEmployeeFin
 
         void setAttributeVar();
 
-        void showSuccessResult(String employeeName);
-
-        void showErrorResult(String employeeName);
+        void showPersonName(String personName);
 
         void stopQRCodeScanner();
 
         void startQRCodeScanner();
 
-        void deviceIsBorrowed(TrackingData trackingData);
+        void renderDeviceIsBorrowed(TrackingData trackingData);
 
-        void deviceIsAvailable();
+        void renderDeviceIsAvailable();
+
+        void renderDeviceNotSelected();
+
+        void renderDeviceList(DeviceData deviceData);
 
         void renderDeviceDetail(DeviceData deviceData);
+
+        void renderDeviceDetail();
 
         void showToastMessage(String message);
 
         boolean isBorrowedDevice();
-
-        void showUrlEmployee(String qrResult);
-
-        void renderDeviceList(DeviceData deviceData);
 
         void showProgressLayout();
 
         void hideProgressLayout();
 
         void resetContentView();
+
+        void enableReturnButton();
+
+        void disableReturnButton();
+
+        void enableBorrowButton();
+
+        void disableBorrowButtn();
     }
 }

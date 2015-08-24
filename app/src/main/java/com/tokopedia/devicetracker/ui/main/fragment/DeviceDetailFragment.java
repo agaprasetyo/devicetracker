@@ -15,10 +15,8 @@ import com.tokopedia.devicetracker.database.model.DeviceData;
 import com.tokopedia.devicetracker.database.model.TrackingData;
 import com.tokopedia.devicetracker.ui.BaseFragment;
 import com.tokopedia.devicetracker.ui.main.presenters.DeviceDetailPresenter;
-import com.tokopedia.devicetracker.utils.StringUtils;
 
 import butterknife.Bind;
-import butterknife.OnClick;
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
 public class DeviceDetailFragment extends BaseFragment implements DeviceDetailPresenter.View, ZXingScannerView.ResultHandler {
@@ -33,8 +31,6 @@ public class DeviceDetailFragment extends BaseFragment implements DeviceDetailPr
     EditText etBorrow;
     @Bind(R.id.btn_borrow)
     Button btnBorrow;
-    @Bind(R.id.et_employee_name_2)
-    EditText etBack;
     @Bind(R.id.btn_back)
     Button btnBack;
     @Bind(R.id.layout_2)
@@ -45,6 +41,8 @@ public class DeviceDetailFragment extends BaseFragment implements DeviceDetailPr
     TextView tvBorrowData;
     @Bind(R.id.layout_progress)
     RelativeLayout layoutProgress;
+    @Bind(R.id.layout_empty)
+    RelativeLayout layoutEmpty;
 
     public static DeviceDetailFragment newInstance(DeviceData deviceData) {
         DeviceDetailFragment fragment = new DeviceDetailFragment();
@@ -74,7 +72,7 @@ public class DeviceDetailFragment extends BaseFragment implements DeviceDetailPr
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         presenter.initialize();
-        // renderDeviceDetail(deviceData);
+        renderDeviceDetail(deviceData);
     }
 
 
@@ -122,7 +120,7 @@ public class DeviceDetailFragment extends BaseFragment implements DeviceDetailPr
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                presenter.unregistrateBorrowData(deviceData);
+                presenter.returnDevice(deviceData);
             }
         });
 
@@ -135,13 +133,8 @@ public class DeviceDetailFragment extends BaseFragment implements DeviceDetailPr
     }
 
     @Override
-    public void showSuccessResult(String employeeName) {
+    public void showPersonName(String employeeName) {
         etBorrow.setText(employeeName);
-    }
-
-    @Override
-    public void showErrorResult(String errorMessage) {
-        etBorrow.setText(errorMessage);
     }
 
     @Override
@@ -152,25 +145,25 @@ public class DeviceDetailFragment extends BaseFragment implements DeviceDetailPr
     @Override
     public void startQRCodeScanner() {
         zXingScannerView.setResultHandler(this);
-        zXingScannerView.startCamera(1);
+        zXingScannerView.startCamera();
     }
 
     @Override
-    public void deviceIsBorrowed(TrackingData trackingData) {
-        tvBorrowData.setText("Lagi dipinjam sama " + trackingData.getPerson().getName() + "\n"
-                + StringUtils.timeStringIND(trackingData.getTime()));
+    public void renderDeviceIsBorrowed(TrackingData trackingData) {
+        tvBorrowData.setText(trackingData.borrowDataDescription());
         layoutBack.setVisibility(View.VISIBLE);
+        layoutEmpty.setVisibility(View.GONE);
     }
 
     @Override
-    public void deviceIsAvailable() {
+    public void renderDeviceIsAvailable() {
         layoutBack.setVisibility(View.GONE);
+        layoutEmpty.setVisibility(View.GONE);
     }
 
     @Override
     public void renderDeviceDetail(DeviceData deviceData) {
         this.deviceData = deviceData;
-        presenter.resetPersonData();
         presenter.analyzeDeviceData(deviceData);
     }
 
@@ -191,11 +184,6 @@ public class DeviceDetailFragment extends BaseFragment implements DeviceDetailPr
     }
 
     @Override
-    public void showUrlEmployee(String qrResult) {
-        etBack.setText(qrResult);
-    }
-
-    @Override
     public void renderDeviceList(DeviceData deviceData) {
         mListener.renderListItem(deviceData);
     }
@@ -212,9 +200,40 @@ public class DeviceDetailFragment extends BaseFragment implements DeviceDetailPr
 
     @Override
     public void resetContentView() {
-        tvBorrowData.setText("");
-        etBack.setText("");
+        disableBorrowButtn();
+        disableReturnButton();
+       // tvBorrowData.setText("");
         etBorrow.setText("");
+    }
+
+    @Override
+    public void renderDeviceNotSelected() {
+        layoutEmpty.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void renderDeviceDetail() {
+        presenter.analyzeDeviceData(this.deviceData);
+    }
+
+    @Override
+    public void enableReturnButton() {
+        btnBack.setEnabled(true);
+    }
+
+    @Override
+    public void disableReturnButton() {
+        btnBack.setEnabled(false);
+    }
+
+    @Override
+    public void enableBorrowButton() {
+        btnBorrow.setEnabled(true);
+    }
+
+    @Override
+    public void disableBorrowButtn() {
+        btnBorrow.setEnabled(false);
     }
 
 

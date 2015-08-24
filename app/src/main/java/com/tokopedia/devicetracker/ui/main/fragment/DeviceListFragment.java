@@ -38,7 +38,6 @@ public class DeviceListFragment extends BaseFragment implements DeviceListPresen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -85,6 +84,10 @@ public class DeviceListFragment extends BaseFragment implements DeviceListPresen
         for (DeviceData deviceData : deviceDataList) {
             adapter.add(deviceData);
         }
+        if (!deviceDataList.isEmpty()) {
+      //      onDeviceListItemClicked(0);
+        //    adapter.setInitialDeviceSelected(0);
+        }
     }
 
     @Override
@@ -92,10 +95,11 @@ public class DeviceListFragment extends BaseFragment implements DeviceListPresen
         adapter = new DeviceListAdapter(this, new ArrayList<DeviceData>());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
+
     }
 
     @Override
-    public void onDeviceListItemClicked(View view, int position) {
+    public void onDeviceListItemClicked(int position) {
         mListener.renderDetailDeviceData(adapter.getItem(position));
     }
 

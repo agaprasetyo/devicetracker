@@ -1,21 +1,24 @@
 package com.tokopedia.devicetracker.ui.interactors;
 
 import com.tokopedia.devicetracker.app.MainApp;
-import com.tokopedia.devicetracker.database.DbContract;
+import com.tokopedia.devicetracker.database.DbService;
 import com.tokopedia.devicetracker.database.model.DeviceData;
 import com.tokopedia.devicetracker.database.model.PersonData;
 import com.tokopedia.devicetracker.database.model.TrackingData;
-import com.tokopedia.devicetracker.ui.main.presenters.DeviceDetailPresenter;
+
+import javax.inject.Inject;
 
 /**
  * Created by Angga.Prasetiyo on 24/08/2015.
  */
-public class TrackingDataInteractorImpl implements TrackingDataInteractor {
-    private static final String TAG = TrackingDataInteractorImpl.class.getSimpleName();
+public class UserTrackingDataInteractorImpl implements UserTrackingDataInteractor {
+    private static final String TAG = UserTrackingDataInteractorImpl.class.getSimpleName();
     private OnTrackingDataFinishedListener listener;
+    @Inject DbService dbService;
 
-    public TrackingDataInteractorImpl(OnTrackingDataFinishedListener listener) {
+    public UserTrackingDataInteractorImpl(OnTrackingDataFinishedListener listener) {
         this.listener = listener;
+
     }
 
     @Override
@@ -30,7 +33,7 @@ public class TrackingDataInteractorImpl implements TrackingDataInteractor {
         if (MainApp.getInstance().getDbService().getTrackingData().saveData(trackingData)) {
             listener.onTracked(trackingData);
         } else {
-            listener.onFailTracking(trackingData);
+            listener.onFailTracking("Kesalahan Database, Ulangi lagi!");
         }
     }
 
@@ -46,7 +49,7 @@ public class TrackingDataInteractorImpl implements TrackingDataInteractor {
         if (MainApp.getInstance().getDbService().getTrackingData().saveData(trackingData)) {
             listener.onTracked(trackingData);
         } else {
-            listener.onFailTracking(trackingData);
+            listener.onFailTracking("Kesalahan Database, Ulangi lagi!");
         }
     }
 
@@ -56,31 +59,8 @@ public class TrackingDataInteractorImpl implements TrackingDataInteractor {
     }
 
     @Override
-    public void trackingAddDevice(DeviceData deviceData, PersonData personData) {
-        deviceData.setnStatus(DeviceData.STATUS_ACTIVE);
-        TrackingData trackingData = new TrackingData();
-        trackingData.setDevice(deviceData);
-        trackingData.setPerson(personData);
-        trackingData.setActivity(TrackingData.ACTIVITY_ADD_DEVICE);
-        if (MainApp.getInstance().getDbService().getTrackingData().saveData(trackingData)) {
-            listener.onTracked(trackingData);
-        } else {
-            listener.onFailTracking(trackingData);
-        }
-    }
-
-    @Override
-    public void trackingRemoveDevice(DeviceData deviceData, PersonData personData) {
-        deviceData.setnStatus(DeviceData.STATUS_DELETED);
-        TrackingData trackingData = new TrackingData();
-        trackingData.setDevice(deviceData);
-        trackingData.setPerson(personData);
-        trackingData.setActivity(TrackingData.ACTIVITY_REMOVE_DEVICE);
-        if (MainApp.getInstance().getDbService().getTrackingData().saveData(trackingData)) {
-            listener.onTracked(trackingData);
-        } else {
-            listener.onFailTracking(trackingData);
-        }
+    public TrackingData getLastTrackingDataBydevice(DeviceData deviceData) {
+        return MainApp.getInstance().getDbService().getTrackingData().getLastBorrowDataByDevice(deviceData);
     }
 
     public void trackingValidatePersonOnDevice(DeviceData deviceData, String url) {
@@ -88,7 +68,7 @@ public class TrackingDataInteractorImpl implements TrackingDataInteractor {
         if (trackingData.getPerson().getUrl().equals(url)) {
             trackingReturnDevice(deviceData, trackingData.getPerson());
         } else {
-            listener.onFailTracking(trackingData);
+            listener.onFailTracking("Data Tidak sama dengan peminjam");
         }
     }
 }

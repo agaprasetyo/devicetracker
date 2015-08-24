@@ -19,15 +19,15 @@ import java.util.regex.Pattern;
  */
 public class QRCodeInteractorImpl implements QRCodeInteractor {
     private static final String TAG = QRCodeInteractorImpl.class.getSimpleName();
-    OnGetEmployeeFinishedListener listener;
+    OnRequestPersonDataFinishedListener listener;
 
-    public QRCodeInteractorImpl(OnGetEmployeeFinishedListener listener) {
+    public QRCodeInteractorImpl(OnRequestPersonDataFinishedListener listener) {
         this.listener = listener;
     }
 
     @Override
-    public void requestEmployeeData(String qrResult) {
-        new TaskGetEmployeeName().execute(qrResult);
+    public void requestPersonData(String urlPerson) {
+        new TaskGetEmployeeName().execute(urlPerson);
     }
 
     private class TaskGetEmployeeName extends AsyncTask<String, String, PersonData> {
@@ -36,7 +36,7 @@ public class QRCodeInteractorImpl implements QRCodeInteractor {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            listener.onProcess();
+            listener.onPersonDataProcess();
         }
 
         @Override
@@ -60,9 +60,9 @@ public class QRCodeInteractorImpl implements QRCodeInteractor {
         protected void onPostExecute(PersonData result) {
             super.onPostExecute(result);
             if (result != null) {
-                listener.onSuccess(result);
+                listener.onPersonDataSuccess(result);
             } else {
-                listener.onError("Tidak Ada data");
+                listener.onPersonDataError("Tidak Ada data");
             }
         }
 

@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.j256.ormlite.dao.Dao;
 import com.tokopedia.devicetracker.database.model.DeviceData;
+import com.tokopedia.devicetracker.database.model.PersonData;
+import com.tokopedia.devicetracker.database.model.TrackingData;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -14,9 +16,16 @@ import java.util.List;
  */
 public class DeviceDataService extends BaseService<DeviceData> {
     private static final String TAG = DeviceDataService.class.getSimpleName();
+    private final Dao<DeviceData, Integer> deviceDataIntegerDao;
 
     public DeviceDataService(Context context) {
         super(context);
+        try {
+            deviceDataIntegerDao = dbHelper.getDeviceDataIntegerDao();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

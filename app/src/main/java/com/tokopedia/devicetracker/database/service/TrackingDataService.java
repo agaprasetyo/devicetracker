@@ -2,6 +2,7 @@ package com.tokopedia.devicetracker.database.service;
 
 import android.content.Context;
 
+import com.j256.ormlite.dao.Dao;
 import com.tokopedia.devicetracker.database.DbContract;
 import com.tokopedia.devicetracker.database.model.DeviceData;
 import com.tokopedia.devicetracker.database.model.PersonData;
@@ -16,10 +17,16 @@ import java.util.List;
  */
 public class TrackingDataService extends BaseService<TrackingData> {
     private static final String TAG = TrackingDataService.class.getSimpleName();
-
+    private final Dao<TrackingData, Integer> trackingDataIntegerDao;
 
     public TrackingDataService(Context context) {
         super(context);
+        try {
+            trackingDataIntegerDao = dbHelper.getTrackingDataIntegerDao();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

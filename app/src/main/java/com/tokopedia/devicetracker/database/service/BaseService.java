@@ -18,20 +18,10 @@ import java.util.List;
 public abstract class BaseService<T> {
     private static final String TAG = BaseService.class.getSimpleName();
 
-    protected final Dao<DeviceData, Integer> deviceDataIntegerDao;
-    protected final Dao<PersonData, Integer> personDataIntegerDao;
-    protected final Dao<TrackingData, Integer> trackingDataIntegerDao;
+    protected final DbHelper dbHelper;
 
     public BaseService(Context context) {
-        DbHelper dbHelper = OpenHelperManager.getHelper(context, DbHelper.class);
-        try {
-            deviceDataIntegerDao = dbHelper.getDeviceDataIntegerDao();
-            personDataIntegerDao = dbHelper.getPersonDataIntegerDao();
-            trackingDataIntegerDao = dbHelper.getTrackingDataIntegerDao();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
+        dbHelper = OpenHelperManager.getHelper(context, DbHelper.class);
     }
 
     public abstract boolean deleteData(T object);

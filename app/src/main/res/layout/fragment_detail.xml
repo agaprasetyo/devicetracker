@@ -61,6 +61,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/et_employee_name_1"
                     android:background="@color/primary_dark"
+                    android:enabled="false"
                     android:text="PINJAM"
                     android:textColor="@color/white"
                     android:textSize="30sp"
@@ -75,21 +76,11 @@
                 android:background="@color/white"
                 android:gravity="center_vertical">
 
-                <EditText
-                    android:id="@+id/et_employee_name_2"
-                    android:layout_width="300sp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:enabled="false"
-                    android:gravity="center"
-                    android:inputType="none"
-                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/tv_desc_borrow_data"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/et_employee_name_2"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="20sp"
                     android:gravity="center"
@@ -104,6 +95,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="20sp"
                     android:background="@color/primary_dark"
+                    android:enabled="false"
                     android:text="BALIKIN"
                     android:textColor="@color/white"
                     android:textSize="30sp" />
@@ -117,14 +109,24 @@
         android:id="@+id/layout_progress"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:visibility="gone">
 
         <ProgressBar
             android:layout_width="@dimen/abc_action_bar_default_height_material"
             android:layout_height="@dimen/abc_action_bar_default_height_material"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:visibility="gone">
+
 
     </RelativeLayout>
 </FrameLayout>

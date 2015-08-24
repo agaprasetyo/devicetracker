@@ -9,5 +9,5 @@ public interface OnTrackingDataFinishedListener {
 
     void onTracked(TrackingData trackingData);
 
-    void onFailTracking(TrackingData trackingData);
+    void onFailTracking(String failMessage);
 }

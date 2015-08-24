@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import com.tokopedia.devicetracker.database.DbContract;
+import com.tokopedia.devicetracker.utils.StringUtils;
 
 import java.util.Date;
 
@@ -82,6 +83,11 @@ public class TrackingData implements Parcelable {
         activity = in.readInt();
         device = (DeviceData) in.readValue(DeviceData.class.getClassLoader());
         person = (PersonData) in.readValue(PersonData.class.getClassLoader());
+    }
+
+    public String borrowDataDescription() {
+        return "Lagi dipinjam sama " + this.person.getName() + "\n"
+                + StringUtils.timeStringIND(this.time);
     }
 
     @Override

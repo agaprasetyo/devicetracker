@@ -7,12 +7,10 @@ import com.tokopedia.devicetracker.database.model.DeviceData;
 import com.tokopedia.devicetracker.ui.BaseActivity;
 import com.tokopedia.devicetracker.ui.main.fragment.DeviceDetailFragment;
 import com.tokopedia.devicetracker.ui.main.fragment.DeviceListFragment;
-import com.tokopedia.devicetracker.ui.main.fragment.EmptyDeviceFragment;
 import com.tokopedia.devicetracker.ui.main.presenters.MainActivityPresenter;
 
 public class MainActivity extends BaseActivity implements DeviceListFragment.OnFragmentInteractionListener,
         DeviceDetailFragment.OnFragmentInteractionListener,
-        EmptyDeviceFragment.OnFragmentInteractionListener,
         MainActivityPresenter.View {
 
     private MainActivityPresenter presenter = new MainActivityPresenter(this);
