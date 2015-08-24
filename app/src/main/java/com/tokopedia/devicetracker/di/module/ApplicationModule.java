@@ -6,8 +6,6 @@ import android.content.Context;
 import com.tokopedia.devicetracker.app.MainApp;
 import com.tokopedia.devicetracker.di.dagger.PerApp;
 
-import javax.inject.Singleton;
-
 import dagger.Module;
 import dagger.Provides;
 
@@ -16,18 +14,31 @@ import dagger.Provides;
  */
 @Module
 public class ApplicationModule {
-    private final MainApp application;
-
+    private final MainApp app;
 
     public ApplicationModule(MainApp mainApp) {
-        this.application = mainApp;
+        this.app = mainApp;
 
     }
 
     @Provides
-    @Singleton
-    Context provideAppContext() {
-        return application;
+    @PerApp
+    MainApp provideNowDoThisApp() {
+        return app;
     }
+
+
+    @Provides
+    @PerApp
+    Context provideAppContext() {
+        return app.getApplicationContext();
+    }
+
+    @Provides
+    @PerApp
+    Application provideApplication(MainApp app) {
+        return app;
+    }
+
 
 }

@@ -62,7 +62,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.Vi
         holder.tvName.setText(deviceDataList.get(position).getDeviceName().toUpperCase());
         holder.tvModel.setText(deviceDataList.get(position).getDeviceModel().toUpperCase());
         holder.tvNumber.setText(deviceDataList.get(position).getDeviceNumber().toUpperCase());
-        ImageLoader.getInstance().displayImage("assets://" + deviceDataList.get(position).getDevicePicAsset(), holder.ivPic, getDisplayImage());
+        ImageLoader.getInstance().displayImage("assets://" + deviceDataList.get(position).getDevicePicPath(), holder.ivPic, getDisplayImage());
         holder.view.setSelected(position == selectedItem);
     }
 

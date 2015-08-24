@@ -1,8 +1,6 @@
 package com.tokopedia.devicetracker.ui.main.presenters;
 
 import com.tokopedia.devicetracker.app.MainApp;
-import com.tokopedia.devicetracker.database.model.BorrowData;
-import com.tokopedia.devicetracker.database.model.BorrowerData;
 import com.tokopedia.devicetracker.database.model.DeviceData;
 import com.tokopedia.devicetracker.ui.interactors.OnGetEmployeeFinishedListener;
 import com.tokopedia.devicetracker.ui.interactors.QRCodeInteractor;
@@ -18,7 +16,6 @@ public class DeviceDetailPresenter extends Presenter implements OnGetEmployeeFin
 
     private View view;
     private QRCodeInteractor qrCodeInteractor;
-    private BorrowerData borrowerData;
     private String urlEmployee;
 
     public DeviceDetailPresenter(View view) {

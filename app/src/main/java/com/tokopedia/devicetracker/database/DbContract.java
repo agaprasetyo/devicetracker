@@ -13,27 +13,27 @@ public interface DbContract {
 
     interface DeviceData {
         String TABLE_NAME = "device_data";
-        String DEVICE_NUMBER = "device_number";
         String DEVICE_MODEL = "device_model";
         String DEVICE_NAME = "device_name";
         String DEVICE_DESC = "device_desc";
-        String DEVICE_PIC_ASSET = "device_pic_asset";
-        String BORROW_DATA = "borrow_data";
+        String DEVICE_PIC_ASSET = "device_pic_path";
         String BORROWED = "borrowed";
+        String N_STATUS = "N_STATUS";
     }
 
-    interface BorrowerData {
-        String TABLE_NAME = "borrower_data";
-        String ID_EMPLOYEE = "id_employee";
-        String URL_EMPLOYEE = "url_employee";
+    interface PersonData {
+        String TABLE_NAME = "person_data";
         String NAME = "name";
-        String DIVISION = "division";
-        String POSITION = "position";
+        String URL = "url";
     }
 
-    interface BorrowData {
-        String TABLE_NAME = "borrow_data";
-        String TIME_OF_BORROW = "time_of_borrow";
-        String BORROWER = "borrower";
+    interface TrackingData {
+        String TABLE_NAME = "tracking_data";
+        String DEVICE = "device_data";
+        String TIME = "time";
+        String ACTIVITY = "activity";
+        String PERSON = "person";
     }
+
+
 }

@@ -1,7 +1,5 @@
 package com.tokopedia.devicetracker.ui.interactors;
 
-import com.tokopedia.devicetracker.database.model.BorrowerData;
-
 /**
  * Created by Angga.Prasetiyo on 18/08/2015.
  */

@@ -1,11 +1,8 @@
 package com.tokopedia.devicetracker.ui.main.fragment;
 
 import android.app.Activity;
-import android.graphics.Camera;
-import android.hardware.camera2.CameraDevice;
 import android.os.Bundle;
 import android.view.View;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -15,7 +12,6 @@ import android.widget.Toast;
 import com.google.zxing.Result;
 import com.tokopedia.devicetracker.R;
 import com.tokopedia.devicetracker.app.MainApp;
-import com.tokopedia.devicetracker.database.model.BorrowData;
 import com.tokopedia.devicetracker.database.model.DeviceData;
 import com.tokopedia.devicetracker.ui.BaseFragment;
 import com.tokopedia.devicetracker.ui.main.presenters.DeviceDetailPresenter;

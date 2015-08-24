@@ -2,8 +2,6 @@ package com.tokopedia.devicetracker.ui.interactors;
 
 import android.os.AsyncTask;
 
-import com.tokopedia.devicetracker.database.model.BorrowerData;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;

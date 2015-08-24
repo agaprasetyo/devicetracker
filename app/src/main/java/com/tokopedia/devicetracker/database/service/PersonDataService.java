@@ -2,27 +2,26 @@ package com.tokopedia.devicetracker.database.service;
 
 import android.content.Context;
 
-import com.j256.ormlite.dao.Dao;
-import com.tokopedia.devicetracker.database.model.DeviceData;
+import com.tokopedia.devicetracker.database.model.PersonData;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Angga.Prasetiyo on 18/08/2015.
+ * Created by Angga.Prasetiyo on 24/08/2015.
  */
-public class DeviceDataService extends BaseService<DeviceData> {
-    private static final String TAG = DeviceDataService.class.getSimpleName();
+public class PersonDataService extends BaseService<PersonData> {
+    private static final String TAG = PersonDataService.class.getSimpleName();
 
-    public DeviceDataService(Context context) {
+    public PersonDataService(Context context) {
         super(context);
     }
 
     @Override
-    public boolean deleteData(DeviceData object) {
+    public boolean deleteData(PersonData object) {
         try {
-            deviceDataIntegerDao.delete(object);
+            personDataIntegerDao.delete(object);
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -31,9 +30,9 @@ public class DeviceDataService extends BaseService<DeviceData> {
     }
 
     @Override
-    public boolean saveData(DeviceData object) {
+    public boolean saveData(PersonData object) {
         try {
-            deviceDataIntegerDao.createOrUpdate(object);
+            personDataIntegerDao.createOrUpdate(object);
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -42,10 +41,9 @@ public class DeviceDataService extends BaseService<DeviceData> {
     }
 
     @Override
-    public List<DeviceData> getListAll() {
+    public List<PersonData> getListAll() {
         try {
-            return deviceDataIntegerDao.queryForAll();
-            //        return new ArrayList<>();
+            return personDataIntegerDao.queryForAll();
         } catch (SQLException e) {
             e.printStackTrace();
             return new ArrayList<>();
@@ -53,9 +51,9 @@ public class DeviceDataService extends BaseService<DeviceData> {
     }
 
     @Override
-    public DeviceData getData(int id) {
+    public PersonData getData(int id) {
         try {
-            return deviceDataIntegerDao.queryForId(id);
+            return personDataIntegerDao.queryForId(id);
         } catch (SQLException e) {
             e.printStackTrace();
             return null;

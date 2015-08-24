@@ -14,13 +14,19 @@ import com.tokopedia.devicetracker.database.DbContract;
 @DatabaseTable(tableName = DbContract.DeviceData.TABLE_NAME)
 public class DeviceData extends Device {
     private static final String TAG = DeviceData.class.getSimpleName();
+    public static final int STATUS_ACTIVE = 1;
+    public static final int STATUS_DELETED = 2;
+
 
     @DatabaseField(generatedId = true, allowGeneratedIdInsert = true, columnName = DbContract.ID)
     private int id;
     @DatabaseField(columnName = DbContract.DeviceData.BORROWED)
     private boolean borrowed = false;
-    @DatabaseField(foreign = true, columnName = DbContract.DeviceData.BORROW_DATA, foreignAutoCreate = true, foreignAutoRefresh = true)
-    private BorrowData borrowData;
+    @DatabaseField(columnName = DbContract.DeviceData.N_STATUS)
+    private int nStatus;
+
+//    @DatabaseField(foreign = true, columnName = DbContract.DeviceData.BORROW_DATA, foreignAutoCreate = true, foreignAutoRefresh = true)
+//    private BorrowData borrowData;
 
     public DeviceData() {
     }
@@ -28,7 +34,6 @@ public class DeviceData extends Device {
     public DeviceData(Device data) {
         this.deviceName = data.getDeviceName();
         this.deviceDesc = data.getDeviceDesc();
-        this.deviceNumber = data.getDeviceNumber();
         this.deviceModel = data.getDeviceModel();
     }
 
@@ -48,21 +53,30 @@ public class DeviceData extends Device {
         this.borrowed = borrowed;
     }
 
-    public BorrowData getBorrowData() {
-        return borrowData;
+    public int getnStatus() {
+        return nStatus;
     }
 
-    public void setBorrowData(BorrowData borrowData) {
-        this.borrowData = borrowData;
+    public void setnStatus(int nStatus) {
+        this.nStatus = nStatus;
     }
 
+    //    public BorrowData getBorrowData() {
+//        return borrowData;
+//    }
+//
+//    public void setBorrowData(BorrowData borrowData) {
+//        this.borrowData = borrowData;
+//    }
+//
     public DeviceData(Parcel in) {
         super(in);
         id = in.readInt();
         borrowed = in.readByte() != 0x00;
-        borrowData = (BorrowData) in.readValue(BorrowData.class.getClassLoader());
+        nStatus = in.readInt();
+        // borrowData = (BorrowData) in.readValue(BorrowData.class.getClassLoader());
     }
-
+//
 
     @Override
     public int describeContents() {
@@ -74,7 +88,8 @@ public class DeviceData extends Device {
         super.writeToParcel(dest, flags);
         dest.writeInt(id);
         dest.writeByte((byte) (borrowed ? 0x01 : 0x00));
-        dest.writeValue(borrowData);
+        dest.writeInt(nStatus);
+        //    dest.writeValue(borrowData);
     }
 
     @SuppressWarnings("unused")
@@ -93,10 +108,10 @@ public class DeviceData extends Device {
     public void setNewData(DeviceData newDeviceData) {
         this.id = newDeviceData.getId();
         this.borrowed = newDeviceData.isBorrowed();
-        this.borrowData = newDeviceData.getBorrowData();
+        //    this.borrowData = newDeviceData.getBorrowData();
+        this.nStatus = newDeviceData.getnStatus();
         this.deviceName = newDeviceData.getDeviceName();
         this.deviceDesc = newDeviceData.getDeviceDesc();
-        this.deviceNumber = newDeviceData.getDeviceNumber();
         this.deviceModel = newDeviceData.getDeviceModel();
     }
 }

@@ -9,9 +9,9 @@ import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.tokopedia.devicetracker.app.AppLog;
 import com.tokopedia.devicetracker.app.MainApp;
-import com.tokopedia.devicetracker.database.model.BorrowData;
-import com.tokopedia.devicetracker.database.model.BorrowerData;
 import com.tokopedia.devicetracker.database.model.DeviceData;
+import com.tokopedia.devicetracker.database.model.PersonData;
+import com.tokopedia.devicetracker.database.model.TrackingData;
 
 import java.sql.SQLException;
 
@@ -22,8 +22,8 @@ public class DbHelper extends OrmLiteSqliteOpenHelper {
     private static final String TAG = DbHelper.class.getSimpleName();
 
     private Dao<DeviceData, Integer> deviceDataIntegerDao = null;
-    private Dao<BorrowData, Integer> borrowDataIntegerDao = null;
-    private Dao<BorrowerData, Integer> borrowerDataIntegerDao = null;
+    private Dao<TrackingData, Integer> trackingDataIntegerDao = null;
+    private Dao<PersonData, Integer> personDataIntegerDao = null;
 
     public DbHelper(Context context) {
         super(context, DbContract.DATABASE_NAME, null, DbContract.DATABASE_VERSION);
@@ -34,13 +34,13 @@ public class DbHelper extends OrmLiteSqliteOpenHelper {
         AppLog.debug(TAG, "on create");
         try {
             TableUtils.createTable(connectionSource, DeviceData.class);
-            TableUtils.createTable(connectionSource, BorrowData.class);
-            TableUtils.createTable(connectionSource, BorrowerData.class);
+            TableUtils.createTable(connectionSource, TrackingData.class);
+            TableUtils.createTable(connectionSource, PersonData.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        fillData();
+        //  fillData();
     }
 
     private void fillData() {
@@ -48,8 +48,7 @@ public class DbHelper extends OrmLiteSqliteOpenHelper {
             DeviceData deviceData = new DeviceData();
             deviceData.setDeviceName("Device " + String.valueOf(i));
             deviceData.setDeviceModel("Model " + String.valueOf(i));
-            deviceData.setDevicePicAsset("picture/image1.jpg");
-            deviceData.setDeviceNumber(String.valueOf(i + 1000));
+            deviceData.setDevicePicPath("picture/image1.jpg");
             deviceData.setDeviceDesc("Description " + String.valueOf(i));
             MainApp.getInstance().getDbService().getDeviceData().saveData(deviceData);
         }
@@ -60,27 +59,13 @@ public class DbHelper extends OrmLiteSqliteOpenHelper {
         AppLog.debug(TAG, "on upgrade");
         try {
             TableUtils.createTableIfNotExists(connectionSource, DeviceData.class);
-            TableUtils.createTableIfNotExists(connectionSource, BorrowData.class);
-            TableUtils.createTableIfNotExists(connectionSource, BorrowerData.class);
+            TableUtils.createTableIfNotExists(connectionSource, PersonData.class);
+            TableUtils.createTableIfNotExists(connectionSource, TrackingData.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-
-    public Dao<BorrowerData, Integer> getBorrowerDataIntegerDao() throws SQLException {
-        if (borrowerDataIntegerDao == null) {
-            borrowerDataIntegerDao = getDao(BorrowerData.class);
-        }
-        return borrowerDataIntegerDao;
-    }
-
-    public Dao<BorrowData, Integer> getBorrowDataIntegerDao() throws SQLException {
-        if (borrowDataIntegerDao == null) {
-            borrowDataIntegerDao = getDao(BorrowData.class);
-        }
-        return borrowDataIntegerDao;
-    }
 
     public Dao<DeviceData, Integer> getDeviceDataIntegerDao() throws SQLException {
         if (deviceDataIntegerDao == null) {
@@ -89,11 +74,25 @@ public class DbHelper extends OrmLiteSqliteOpenHelper {
         return deviceDataIntegerDao;
     }
 
+    public Dao<PersonData, Integer> getPersonDataIntegerDao() throws SQLException {
+        if (personDataIntegerDao == null) {
+            personDataIntegerDao = getDao(PersonData.class);
+        }
+        return personDataIntegerDao;
+    }
+
+    public Dao<TrackingData, Integer> getTrackingDataIntegerDao() throws SQLException {
+        if (trackingDataIntegerDao == null) {
+            trackingDataIntegerDao = getDao(TrackingData.class);
+        }
+        return trackingDataIntegerDao;
+    }
+
     @Override
     public void close() {
         super.close();
         this.deviceDataIntegerDao = null;
-        this.borrowDataIntegerDao = null;
-        this.borrowerDataIntegerDao = null;
+        this.trackingDataIntegerDao = null;
+        this.personDataIntegerDao = null;
     }
 }

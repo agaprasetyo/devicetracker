@@ -5,6 +5,11 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.tokopedia.devicetracker.app.MainApp;
+import com.tokopedia.devicetracker.database.DbService;
+
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 
 /**
@@ -14,11 +19,14 @@ public abstract class BaseActivity extends AppCompatActivity {
     private static final String TAG = BaseActivity.class.getSimpleName();
 
     protected FragmentManager fragmentManager;
+    @Inject
+    DbService dbService;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getResourceLayoutId());
+        MainApp.getComponent(this).inject(this);
         injectViews();
         this.fragmentManager = getFragmentManager();
     }

@@ -12,27 +12,18 @@ import com.tokopedia.devicetracker.database.DbContract;
 public class Device implements Parcelable {
     private static final String TAG = Device.class.getSimpleName();
 
-    @DatabaseField(columnName = DbContract.DeviceData.DEVICE_NUMBER)
-    protected String deviceNumber;
     @DatabaseField(columnName = DbContract.DeviceData.DEVICE_NAME)
     protected String deviceName;
     @DatabaseField(columnName = DbContract.DeviceData.DEVICE_MODEL)
     protected String deviceModel;
     @DatabaseField(columnName = DbContract.DeviceData.DEVICE_PIC_ASSET)
-    protected String devicePicAsset;
+    protected String devicePicPath;
     @DatabaseField(columnName = DbContract.DeviceData.DEVICE_DESC)
     protected String deviceDesc;
 
     public Device() {
     }
 
-    public String getDeviceNumber() {
-        return deviceNumber;
-    }
-
-    public void setDeviceNumber(String deviceNumber) {
-        this.deviceNumber = deviceNumber;
-    }
 
     public String getDeviceName() {
         return deviceName;
@@ -58,19 +49,18 @@ public class Device implements Parcelable {
         this.deviceDesc = deviceDesc;
     }
 
-    public String getDevicePicAsset() {
-        return devicePicAsset;
+    public String getDevicePicPath() {
+        return devicePicPath;
     }
 
-    public void setDevicePicAsset(String devicePicAsset) {
-        this.devicePicAsset = devicePicAsset;
+    public void setDevicePicPath(String devicePicPath) {
+        this.devicePicPath = devicePicPath;
     }
 
     protected Device(Parcel in) {
-        deviceNumber = in.readString();
         deviceName = in.readString();
         deviceModel = in.readString();
-        devicePicAsset = in.readString();
+        devicePicPath = in.readString();
         deviceDesc = in.readString();
     }
 
@@ -81,10 +71,9 @@ public class Device implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(deviceNumber);
         dest.writeString(deviceName);
         dest.writeString(deviceModel);
-        dest.writeString(devicePicAsset);
+        dest.writeString(devicePicPath);
         dest.writeString(deviceDesc);
     }
 

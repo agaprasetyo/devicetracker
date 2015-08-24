@@ -1,7 +1,6 @@
 package com.tokopedia.devicetracker.app;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.multidex.MultiDexApplication;
 
 import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
@@ -10,12 +9,14 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.nostra13.universalimageloader.utils.StorageUtils;
-import com.tokopedia.devicetracker.database.BundleService;
+import com.tokopedia.devicetracker.database.DbService;
 import com.tokopedia.devicetracker.di.component.DaggerMainAppComponent;
 import com.tokopedia.devicetracker.di.component.MainAppComponent;
 import com.tokopedia.devicetracker.di.module.ApplicationModule;
 
 import java.io.File;
+
+import javax.inject.Inject;
 
 /**
  * Created by Angga.Prasetiyo on 18/08/2015.
@@ -24,7 +25,8 @@ public class MainApp extends MultiDexApplication {
     private static final String TAG = MainApp.class.getSimpleName();
     private static MainApp mInstance;
     private ImageLoader mImageLoader;
-    private BundleService dbService;
+    @Inject
+    DbService dbService;
     private MainAppComponent mainAppComponent;
 
     public static synchronized MainApp getInstance() {
@@ -41,19 +43,15 @@ public class MainApp extends MultiDexApplication {
         mainAppComponent.inject(this);
         mInstance = this;
         initialImageLoader();
-        initialDbService();
+        //   initialDbService();
     }
 
-    public MainAppComponent getComponent(Context context) {
+    public static MainAppComponent getComponent(Context context) {
         return ((MainApp) context.getApplicationContext()).mainAppComponent;
     }
 
-    public static MainApp from(@NonNull Context context) {
-        return (MainApp) context.getApplicationContext();
-    }
-
     private void initialDbService() {
-        this.dbService = new BundleService(this);
+        this.dbService = new DbService(this);
     }
 
     private void initialImageLoader() {
@@ -71,7 +69,7 @@ public class MainApp extends MultiDexApplication {
         com.nostra13.universalimageloader.core.ImageLoader.getInstance().init(config);
     }
 
-    public BundleService getDbService() {
+    public DbService getDbService() {
         return dbService;
     }
 }
