@@ -2,6 +2,8 @@ package com.tokopedia.devicetracker.ui.interactors;
 
 import android.os.AsyncTask;
 
+import com.tokopedia.devicetracker.database.model.PersonData;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,7 +30,7 @@ public class QRCodeInteractorImpl implements QRCodeInteractor {
         new TaskGetEmployeeName().execute(qrResult);
     }
 
-    private class TaskGetEmployeeName extends AsyncTask<String, String, BorrowerData> {
+    private class TaskGetEmployeeName extends AsyncTask<String, String, PersonData> {
         private final Pattern TITLE_TAG = Pattern.compile("\\<title>(.*)\\</title>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 
         @Override
@@ -38,15 +40,16 @@ public class QRCodeInteractorImpl implements QRCodeInteractor {
         }
 
         @Override
-        protected BorrowerData doInBackground(String... params) {
+        protected PersonData doInBackground(String... params) {
             String url = params[0];
             try {
                 String title = getPageTitle(url);
                 String name = title.substring(0, title.indexOf("|") - 1);
-                BorrowerData borrowerData = new BorrowerData();
-                borrowerData.setUrlEmployee(url);
-                borrowerData.setName(name);
-                return borrowerData;
+                PersonData personData = new PersonData();
+                personData.setId(Integer.valueOf(url.substring(url.lastIndexOf("/")+1)));
+                personData.setName(name);
+                personData.setUrl(url);
+                return personData;
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -54,7 +57,7 @@ public class QRCodeInteractorImpl implements QRCodeInteractor {
         }
 
         @Override
-        protected void onPostExecute(BorrowerData result) {
+        protected void onPostExecute(PersonData result) {
             super.onPostExecute(result);
             if (result != null) {
                 listener.onSuccess(result);

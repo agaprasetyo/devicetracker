@@ -11,13 +11,11 @@ import android.widget.Toast;
 
 import com.google.zxing.Result;
 import com.tokopedia.devicetracker.R;
-import com.tokopedia.devicetracker.app.MainApp;
 import com.tokopedia.devicetracker.database.model.DeviceData;
+import com.tokopedia.devicetracker.database.model.TrackingData;
 import com.tokopedia.devicetracker.ui.BaseFragment;
 import com.tokopedia.devicetracker.ui.main.presenters.DeviceDetailPresenter;
-
-import java.text.SimpleDateFormat;
-import java.util.Locale;
+import com.tokopedia.devicetracker.utils.StringUtils;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -59,23 +57,11 @@ public class DeviceDetailFragment extends BaseFragment implements DeviceDetailPr
     public DeviceDetailFragment() {
     }
 
-    @OnClick(R.id.btn_borrow)
-    public void borrow() {
-        presenter.registrateBorrowData(deviceData);
-    }
-
-    @OnClick(R.id.btn_back)
-    public void back() {
-        presenter.unregistrateBorrowData(deviceData);
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            deviceData = getArguments().getParcelable(ARG_PARAM_DEVICE_DATA);
-        } else {
-            deviceData = MainApp.getInstance().getDbService().getDeviceData().getData(1);
+            this.deviceData = getArguments().getParcelable(ARG_PARAM_DEVICE_DATA);
         }
     }
 
@@ -88,7 +74,7 @@ public class DeviceDetailFragment extends BaseFragment implements DeviceDetailPr
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         presenter.initialize();
-        refreshDeviceStatus(deviceData);
+        // renderDeviceDetail(deviceData);
     }
 
 
@@ -133,7 +119,19 @@ public class DeviceDetailFragment extends BaseFragment implements DeviceDetailPr
 
     @Override
     public void setAttributeVar() {
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                presenter.unregistrateBorrowData(deviceData);
+            }
+        });
 
+        btnBorrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                presenter.borrowDevice(deviceData);
+            }
+        });
     }
 
     @Override
@@ -158,9 +156,9 @@ public class DeviceDetailFragment extends BaseFragment implements DeviceDetailPr
     }
 
     @Override
-    public void deviceIsBorrowed(BorrowData borrowData) {
-        tvBorrowData.setText("Lagi dipinjam sama " + this.deviceData.getBorrowData().getBorrowerData().getName() + "\n"
-                + new SimpleDateFormat("EEEE, dd MMMM yyyy", new Locale("in_ID")).format(this.deviceData.getBorrowData().getTime()));
+    public void deviceIsBorrowed(TrackingData trackingData) {
+        tvBorrowData.setText("Lagi dipinjam sama " + trackingData.getPerson().getName() + "\n"
+                + StringUtils.timeStringIND(trackingData.getTime()));
         layoutBack.setVisibility(View.VISIBLE);
     }
 
@@ -170,14 +168,17 @@ public class DeviceDetailFragment extends BaseFragment implements DeviceDetailPr
     }
 
     @Override
+    public void renderDeviceDetail(DeviceData deviceData) {
+        this.deviceData = deviceData;
+        presenter.resetPersonData();
+        presenter.analyzeDeviceData(deviceData);
+    }
+
+    @Override
     public void handleResult(Result result) {
         presenter.processQRResult(result.toString());
     }
 
-    public void refreshDeviceStatus(DeviceData deviceData) {
-        this.deviceData = deviceData;
-        presenter.analyzeDeviceData(deviceData);
-    }
 
     @Override
     public void showToastMessage(String message) {
@@ -195,8 +196,8 @@ public class DeviceDetailFragment extends BaseFragment implements DeviceDetailPr
     }
 
     @Override
-    public void renderDeviceList(DeviceData id) {
-        mListener.renderListItem(id);
+    public void renderDeviceList(DeviceData deviceData) {
+        mListener.renderListItem(deviceData);
     }
 
     @Override
@@ -215,6 +216,7 @@ public class DeviceDetailFragment extends BaseFragment implements DeviceDetailPr
         etBack.setText("");
         etBorrow.setText("");
     }
+
 
     public interface OnFragmentInteractionListener {
         void renderListItem(DeviceData deviceId);

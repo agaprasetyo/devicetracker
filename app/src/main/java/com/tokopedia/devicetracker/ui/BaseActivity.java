@@ -18,7 +18,6 @@ import butterknife.ButterKnife;
 public abstract class BaseActivity extends AppCompatActivity {
     private static final String TAG = BaseActivity.class.getSimpleName();
 
-    protected FragmentManager fragmentManager;
     @Inject
     DbService dbService;
 
@@ -28,7 +27,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         setContentView(getResourceLayoutId());
         MainApp.getComponent(this).inject(this);
         injectViews();
-        this.fragmentManager = getFragmentManager();
     }
 
     protected abstract int getResourceLayoutId();
@@ -57,8 +55,5 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onStop();
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
-    }
+
 }

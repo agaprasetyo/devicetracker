@@ -3,9 +3,16 @@ package com.tokopedia.devicetracker.database.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+import com.tokopedia.devicetracker.database.DbContract;
+
+import java.util.Date;
+
 /**
  * Created by Angga.Prasetiyo on 24/08/2015.
  */
+@DatabaseTable(tableName = DbContract.TrackingData.TABLE_NAME)
 public class TrackingData implements Parcelable {
     private static final String TAG = TrackingData.class.getSimpleName();
 
@@ -14,13 +21,19 @@ public class TrackingData implements Parcelable {
     public static final int ACTIVITY_ADD_DEVICE = 2;
     public static final int ACTIVITY_REMOVE_DEVICE = 3;
 
+    @DatabaseField(generatedId = true, allowGeneratedIdInsert = true, columnName = DbContract.ID)
     private int id;
+    @DatabaseField(columnName = DbContract.TrackingData.TIME)
     private long time;
+    @DatabaseField(columnName = DbContract.TrackingData.ACTIVITY)
     private int activity;
+    @DatabaseField(foreign = true, columnName = DbContract.TrackingData.DEVICE, foreignAutoCreate = true, foreignAutoRefresh = true)
     private DeviceData device;
+    @DatabaseField(foreign = true, columnName = DbContract.TrackingData.PERSON, foreignAutoCreate = true, foreignAutoRefresh = true)
     private PersonData person;
 
     public TrackingData() {
+        this.time = new Date().getTime();
     }
 
     public int getId() {

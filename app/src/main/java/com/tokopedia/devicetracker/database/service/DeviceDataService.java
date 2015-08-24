@@ -61,4 +61,5 @@ public class DeviceDataService extends BaseService<DeviceData> {
             return null;
         }
     }
+
 }

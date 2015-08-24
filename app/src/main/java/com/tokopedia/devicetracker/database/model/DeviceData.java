@@ -35,6 +35,7 @@ public class DeviceData extends Device {
         this.deviceName = data.getDeviceName();
         this.deviceDesc = data.getDeviceDesc();
         this.deviceModel = data.getDeviceModel();
+        this.devicePicPath = data.getDevicePicPath();
     }
 
     public int getId() {

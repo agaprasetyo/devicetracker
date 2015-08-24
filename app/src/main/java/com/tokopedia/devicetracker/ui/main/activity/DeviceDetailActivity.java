@@ -1,7 +1,6 @@
 package com.tokopedia.devicetracker.ui.main.activity;
 
 import android.content.res.Configuration;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,9 +24,9 @@ public class DeviceDetailActivity extends BaseActivity implements DeviceDetailFr
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             DeviceData deviceData = extras.getParcelable(EXTRA_DEVICE_DATA);
-            DeviceDetailFragment detailFragment = (DeviceDetailFragment) fragmentManager
+            DeviceDetailFragment detailFragment = (DeviceDetailFragment) getFragmentManager()
                     .findFragmentById(R.id.container_detail);
-            detailFragment.refreshDeviceStatus(deviceData);
+            detailFragment.renderDeviceDetail(deviceData);
         }
     }
 
@@ -59,7 +58,7 @@ public class DeviceDetailActivity extends BaseActivity implements DeviceDetailFr
     }
 
     @Override
-    public void renderListItem(DeviceData deviceId) {
+    public void renderListItem(DeviceData deviceData) {
 
     }
 }

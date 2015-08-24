@@ -3,16 +3,51 @@ package com.tokopedia.devicetracker.database.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+import com.tokopedia.devicetracker.database.DbContract;
+
 /**
  * Created by Angga.Prasetiyo on 24/08/2015.
  */
+@DatabaseTable(tableName = DbContract.PersonData.TABLE_NAME)
 public class PersonData implements Parcelable {
     private static final String TAG = PersonData.class.getSimpleName();
 
+    @DatabaseField(generatedId = true, allowGeneratedIdInsert = true, columnName = DbContract.ID)
     private int id;
+    @DatabaseField(columnName = DbContract.PersonData.URL)
     private String url;
+    @DatabaseField(columnName = DbContract.PersonData.NAME)
     private String name;
 
+    public PersonData() {
+
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     protected PersonData(Parcel in) {
         id = in.readInt();

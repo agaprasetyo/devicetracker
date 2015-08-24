@@ -40,16 +40,17 @@ public class DbHelper extends OrmLiteSqliteOpenHelper {
             e.printStackTrace();
         }
 
-        //  fillData();
+        fillData();
     }
 
     private void fillData() {
         for (int i = 0; i < 20; i++) {
             DeviceData deviceData = new DeviceData();
-            deviceData.setDeviceName("Device " + String.valueOf(i));
-            deviceData.setDeviceModel("Model " + String.valueOf(i));
+            deviceData.setId(i + 1);
+            deviceData.setDeviceName("Device " + String.valueOf(i + 1));
+            deviceData.setDeviceModel("Model " + String.valueOf(i + 1));
             deviceData.setDevicePicPath("picture/image1.jpg");
-            deviceData.setDeviceDesc("Description " + String.valueOf(i));
+            deviceData.setDeviceDesc("Description " + String.valueOf(i + 1));
             MainApp.getInstance().getDbService().getDeviceData().saveData(deviceData);
         }
     }

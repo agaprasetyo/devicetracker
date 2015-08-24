@@ -35,25 +35,8 @@ public class TrackingDataService extends BaseService<TrackingData> {
 
     @Override
     public boolean saveData(TrackingData object) {
-        DeviceData deviceData = object.getDevice();
-        PersonData personData = object.getPerson();
-        switch (object.getActivity()) {
-            case TrackingData.ACTIVITY_BORROW:
-                deviceData.setBorrowed(true);
-                break;
-            case TrackingData.ACTIVITY_ADD_DEVICE:
-                deviceData.setnStatus(DeviceData.STATUS_ACTIVE);
-                break;
-            case TrackingData.ACTIVITY_RETURN:
-                deviceData.setBorrowed(false);
-                break;
-            case TrackingData.ACTIVITY_REMOVE_DEVICE:
-                deviceData.setnStatus(DeviceData.STATUS_DELETED);
-                break;
-        }
         try {
-            deviceDataIntegerDao.createOrUpdate(deviceData);
-            personDataIntegerDao.createOrUpdate(personData);
+            trackingDataIntegerDao.createOrUpdate(object);
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -85,7 +68,8 @@ public class TrackingDataService extends BaseService<TrackingData> {
     public TrackingData getLastBorrowDataByDevice(DeviceData deviceData) {
         try {
             return trackingDataIntegerDao.queryBuilder()
-                    .orderBy(DbContract.TrackingData.TIME, false)
+                    .limit((long) 1)
+                    .orderBy(DbContract.ID, false)
                     .where()
                     .eq(DbContract.TrackingData.DEVICE, deviceData)
                     .and()

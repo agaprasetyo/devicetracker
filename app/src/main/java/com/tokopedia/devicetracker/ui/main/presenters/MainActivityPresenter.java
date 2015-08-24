@@ -1,6 +1,8 @@
 package com.tokopedia.devicetracker.ui.main.presenters;
 
+import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 
 import com.tokopedia.devicetracker.R;
@@ -22,7 +24,7 @@ public class MainActivityPresenter extends Presenter {
 
     @Override
     public void initialize() {
-
+        view.setAttributeVar();
     }
 
     @Override
@@ -36,9 +38,18 @@ public class MainActivityPresenter extends Presenter {
     }
 
     public void processRenderDeviceData(MainActivity mainActivity, FragmentManager fragmentManager, DeviceData deviceData) {
-        DeviceDetailFragment fragment = (DeviceDetailFragment) fragmentManager.findFragmentById(R.id.container_detail);
-        if (fragment != null && fragment.isInLayout()) {
-            ((DeviceDetailFragment) fragmentManager.findFragmentById(R.id.container_detail)).refreshDeviceStatus(deviceData);
+        Fragment fragment = fragmentManager.findFragmentById(R.id.container_detail);
+
+
+        if (fragment.isInLayout()) {
+            if (fragment instanceof DeviceDetailFragment) {
+                ((DeviceDetailFragment) fragment).renderDeviceDetail(deviceData);
+            } else {
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                fragmentTransaction.replace(R.id.container_detail, DeviceDetailFragment.newInstance(deviceData));
+                fragmentTransaction.commit();
+            }
         } else {
             Intent intent = new Intent(mainActivity,
                     DeviceDetailActivity.class);
@@ -49,5 +60,6 @@ public class MainActivityPresenter extends Presenter {
 
     public interface View {
 
+        void setAttributeVar();
     }
 }

@@ -1,26 +1,35 @@
 package com.tokopedia.devicetracker.ui.main.presenters;
 
 import com.tokopedia.devicetracker.app.MainApp;
+import com.tokopedia.devicetracker.database.DbContract;
 import com.tokopedia.devicetracker.database.model.DeviceData;
+import com.tokopedia.devicetracker.database.model.PersonData;
+import com.tokopedia.devicetracker.database.model.TrackingData;
 import com.tokopedia.devicetracker.ui.interactors.OnGetEmployeeFinishedListener;
+import com.tokopedia.devicetracker.ui.interactors.OnTrackingDataFinishedListener;
 import com.tokopedia.devicetracker.ui.interactors.QRCodeInteractor;
 import com.tokopedia.devicetracker.ui.interactors.QRCodeInteractorImpl;
-
-import java.util.Date;
+import com.tokopedia.devicetracker.ui.interactors.TrackingDataInteractor;
+import com.tokopedia.devicetracker.ui.interactors.TrackingDataInteractorImpl;
+import com.tokopedia.devicetracker.ui.main.activity.MainActivity;
 
 /**
  * Created by Angga.Prasetiyo on 18/08/2015.
  */
-public class DeviceDetailPresenter extends Presenter implements OnGetEmployeeFinishedListener {
+public class DeviceDetailPresenter extends Presenter implements OnGetEmployeeFinishedListener, OnTrackingDataFinishedListener {
     private static final String TAG = DeviceDetailPresenter.class.getSimpleName();
 
     private View view;
     private QRCodeInteractor qrCodeInteractor;
+    private TrackingDataInteractor trackingDataInteractor;
+
     private String urlEmployee;
+    private PersonData personData;
 
     public DeviceDetailPresenter(View view) {
         this.view = view;
         this.qrCodeInteractor = new QRCodeInteractorImpl(this);
+        this.trackingDataInteractor = new TrackingDataInteractorImpl(this);
     }
 
     @Override
@@ -39,10 +48,10 @@ public class DeviceDetailPresenter extends Presenter implements OnGetEmployeeFin
     }
 
     @Override
-    public void onSuccess(BorrowerData borrowerData) {
-        this.borrowerData = borrowerData;
+    public void onSuccess(PersonData personData) {
+        this.personData = personData;
         view.startQRCodeScanner();
-        view.showSuccessResult(borrowerData.getName());
+        view.showSuccessResult(personData.getName());
         view.hideProgressLayout();
     }
 
@@ -60,25 +69,19 @@ public class DeviceDetailPresenter extends Presenter implements OnGetEmployeeFin
 
     public void analyzeDeviceData(DeviceData deviceData) {
         view.resetContentView();
+        this.urlEmployee = null;
         if (deviceData.isBorrowed()) {
-            view.deviceIsBorrowed(deviceData.getBorrowData());
+            TrackingData trackingData = MainApp.getInstance().getDbService().getTrackingData().getLastBorrowDataByDevice(deviceData);
+            view.deviceIsBorrowed(trackingData);
         } else {
             view.deviceIsAvailable();
         }
+
     }
 
-    public void registrateBorrowData(DeviceData deviceData) {
-        if (borrowerData != null) {
-            BorrowData borrowData = new BorrowData();
-            borrowData.setBorrowerData(borrowerData);
-            borrowData.setTime(new Date().getTime());
-            MainApp.getInstance().getDbService().getBorrowerData().saveData(borrowerData);
-            MainApp.getInstance().getDbService().getBorrowData().saveData(borrowData);
-            deviceData.setBorrowed(true);
-            deviceData.setBorrowData(borrowData);
-            MainApp.getInstance().getDbService().getDeviceData().saveData(deviceData);
-            view.refreshDeviceStatus(deviceData);
-            view.renderDeviceList(deviceData);
+    public void borrowDevice(DeviceData deviceData) {
+        if (personData != null) {
+            trackingDataInteractor.trackingBorrowDevice(deviceData, personData);
         } else {
             view.showToastMessage("Scan barcode dulu brooo!");
         }
@@ -88,7 +91,6 @@ public class DeviceDetailPresenter extends Presenter implements OnGetEmployeeFin
         view.resetContentView();
         if (view.isBorrowedDevice()) {
             this.urlEmployee = qrResult;
-            view.showUrlEmployee(qrResult);
             view.startQRCodeScanner();
         } else {
             if (qrResult.contains("https://www.tokopedia.com/team"))
@@ -99,13 +101,42 @@ public class DeviceDetailPresenter extends Presenter implements OnGetEmployeeFin
     }
 
     public void unregistrateBorrowData(DeviceData deviceData) {
-        if (urlEmployee != null & deviceData.getBorrowData().getBorrowerData().getUrlEmployee().equals(this.urlEmployee)) {
-            deviceData.setBorrowed(false);
-            deviceData.setBorrowData(null);
-            MainApp.getInstance().getDbService().getDeviceData().saveData(deviceData);
-            view.refreshDeviceStatus(deviceData);
+        if (urlEmployee != null) {
+            trackingDataInteractor.trackingReturnDevice(deviceData, urlEmployee);
         } else {
-            view.showToastMessage("Data beda nih coy!");
+            view.showToastMessage("Scan dulu bro!");
+        }
+    }
+
+    public void resetPersonData() {
+        this.personData = null;
+    }
+
+
+    @Override
+    public void onTracked(TrackingData trackingData) {
+        switch (trackingData.getActivity()) {
+            case TrackingData.ACTIVITY_BORROW:
+                view.renderDeviceList(trackingData.getDevice());
+                view.renderDeviceDetail(trackingData.getDevice());
+                break;
+            case TrackingData.ACTIVITY_RETURN:
+                view.showUrlEmployee(trackingData.getPerson().getName());
+                break;
+        }
+
+    }
+
+    @Override
+    public void onFailTracking(TrackingData trackingData) {
+        switch (trackingData.getActivity()) {
+            case TrackingData.ACTIVITY_BORROW:
+
+                break;
+            case TrackingData.ACTIVITY_RETURN:
+
+                view.showToastMessage("Data tidak sama dengan peminjam!");
+                break;
         }
     }
 
@@ -125,11 +156,11 @@ public class DeviceDetailPresenter extends Presenter implements OnGetEmployeeFin
 
         void startQRCodeScanner();
 
-        void deviceIsBorrowed(BorrowData borrowData);
+        void deviceIsBorrowed(TrackingData trackingData);
 
         void deviceIsAvailable();
 
-        void refreshDeviceStatus(DeviceData deviceData);
+        void renderDeviceDetail(DeviceData deviceData);
 
         void showToastMessage(String message);
 
@@ -137,7 +168,7 @@ public class DeviceDetailPresenter extends Presenter implements OnGetEmployeeFin
 
         void showUrlEmployee(String qrResult);
 
-        void renderDeviceList(DeviceData id);
+        void renderDeviceList(DeviceData deviceData);
 
         void showProgressLayout();
 
