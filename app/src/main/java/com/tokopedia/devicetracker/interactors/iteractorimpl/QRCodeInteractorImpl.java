@@ -1,8 +1,10 @@
-package com.tokopedia.devicetracker.ui.interactors;
+package com.tokopedia.devicetracker.interactors.iteractorimpl;
 
 import android.os.AsyncTask;
 
 import com.tokopedia.devicetracker.database.model.PersonData;
+import com.tokopedia.devicetracker.interactors.listener.OnRequestPersonDataFinishedListener;
+import com.tokopedia.devicetracker.interactors.interactor.QRCodeInteractor;
 
 import java.io.BufferedReader;
 import java.io.IOException;

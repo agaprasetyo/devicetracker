@@ -21,6 +21,8 @@ public class TrackingData implements Parcelable {
     public static final int ACTIVITY_RETURN = 0;
     public static final int ACTIVITY_ADD_DEVICE = 2;
     public static final int ACTIVITY_REMOVE_DEVICE = 3;
+    public static final int ACTIVITY_RESTORE_DEVICE = 4;
+    public static final int ACTIVITY_UPDATE_DEVICE = 5;
 
     @DatabaseField(generatedId = true, allowGeneratedIdInsert = true, columnName = DbContract.ID)
     private int id;

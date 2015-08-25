@@ -1,5 +1,6 @@
 package com.tokopedia.devicetracker.ui.main.presenters;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -7,6 +8,7 @@ import android.content.Intent;
 
 import com.tokopedia.devicetracker.R;
 import com.tokopedia.devicetracker.database.model.DeviceData;
+import com.tokopedia.devicetracker.ui.administration.activity.MainAdminActivity;
 import com.tokopedia.devicetracker.ui.main.activity.DeviceDetailActivity;
 import com.tokopedia.devicetracker.ui.main.activity.MainActivity;
 import com.tokopedia.devicetracker.ui.main.fragment.DeviceDetailFragment;
@@ -38,18 +40,9 @@ public class MainActivityPresenter extends Presenter {
     }
 
     public void processRenderDeviceData(MainActivity mainActivity, FragmentManager fragmentManager, DeviceData deviceData) {
-        Fragment fragment = fragmentManager.findFragmentById(R.id.container_detail);
-
-
-        if (fragment.isInLayout()) {
-            if (fragment instanceof DeviceDetailFragment) {
-                ((DeviceDetailFragment) fragment).renderDeviceDetail(deviceData);
-            } else {
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-                fragmentTransaction.replace(R.id.container_detail, DeviceDetailFragment.newInstance(deviceData));
-                fragmentTransaction.commit();
-            }
+        DeviceDetailFragment fragment = (DeviceDetailFragment) fragmentManager.findFragmentById(R.id.container_detail);
+        if (fragment != null && fragment.isInLayout()) {
+            fragment.renderDeviceDetail(deviceData);
         } else {
             Intent intent = new Intent(mainActivity,
                     DeviceDetailActivity.class);
@@ -58,8 +51,15 @@ public class MainActivityPresenter extends Presenter {
         }
     }
 
+    public Intent createIntentAdministration(Activity activity) {
+        return MainAdminActivity.factoryIntent(activity);
+    }
+
     public interface View {
 
+        void navigateToAdministration();
+
         void setAttributeVar();
+
     }
 }

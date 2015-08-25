@@ -1,4 +1,4 @@
-package com.tokopedia.devicetracker.ui.interactors;
+package com.tokopedia.devicetracker.interactors.interactor;
 
 import com.tokopedia.devicetracker.database.model.DeviceData;
 import com.tokopedia.devicetracker.database.model.PersonData;

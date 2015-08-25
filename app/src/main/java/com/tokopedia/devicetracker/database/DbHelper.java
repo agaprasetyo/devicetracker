@@ -47,6 +47,7 @@ public class DbHelper extends OrmLiteSqliteOpenHelper {
         for (int i = 0; i < 20; i++) {
             DeviceData deviceData = new DeviceData();
             deviceData.setId(i + 1);
+            deviceData.setnStatus(DeviceData.STATUS_ACTIVE);
             deviceData.setDeviceName("Device " + String.valueOf(i + 1));
             deviceData.setDeviceModel("Model " + String.valueOf(i + 1));
             deviceData.setDevicePicPath("picture/image1.jpg");

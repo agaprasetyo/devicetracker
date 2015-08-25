@@ -1,4 +1,4 @@
-package com.tokopedia.devicetracker.ui.interactors;
+package com.tokopedia.devicetracker.interactors.interactor;
 
 /**
  * Created by Angga.Prasetiyo on 18/08/2015.

@@ -5,6 +5,10 @@
     android:background="@color/white"
     tools:context="com.tokopedia.devicetracker.ui.main.fragment.DeviceDetailFragment">
 
+    <View
+        android:layout_width="15dp"
+        android:layout_height="fill_parent"
+        android:background="@drawable/shadow_left" />
 
     <LinearLayout
         android:layout_width="match_parent"

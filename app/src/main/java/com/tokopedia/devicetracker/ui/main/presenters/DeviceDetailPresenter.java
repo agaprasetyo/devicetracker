@@ -3,12 +3,12 @@ package com.tokopedia.devicetracker.ui.main.presenters;
 import com.tokopedia.devicetracker.database.model.DeviceData;
 import com.tokopedia.devicetracker.database.model.PersonData;
 import com.tokopedia.devicetracker.database.model.TrackingData;
-import com.tokopedia.devicetracker.ui.interactors.OnRequestPersonDataFinishedListener;
-import com.tokopedia.devicetracker.ui.interactors.OnTrackingDataFinishedListener;
-import com.tokopedia.devicetracker.ui.interactors.QRCodeInteractor;
-import com.tokopedia.devicetracker.ui.interactors.QRCodeInteractorImpl;
-import com.tokopedia.devicetracker.ui.interactors.UserTrackingDataInteractor;
-import com.tokopedia.devicetracker.ui.interactors.UserTrackingDataInteractorImpl;
+import com.tokopedia.devicetracker.interactors.listener.OnRequestPersonDataFinishedListener;
+import com.tokopedia.devicetracker.interactors.listener.OnTrackingDataFinishedListener;
+import com.tokopedia.devicetracker.interactors.interactor.QRCodeInteractor;
+import com.tokopedia.devicetracker.interactors.iteractorimpl.QRCodeInteractorImpl;
+import com.tokopedia.devicetracker.interactors.interactor.UserTrackingDataInteractor;
+import com.tokopedia.devicetracker.interactors.iteractorimpl.UserTrackingDataInteractorImpl;
 
 /**
  * Created by Angga.Prasetiyo on 18/08/2015.
@@ -126,13 +126,13 @@ public class DeviceDetailPresenter extends Presenter implements OnRequestPersonD
 
 
     @Override
-    public void onTracked(TrackingData trackingData) {
+    public void onDataTracked(TrackingData trackingData) {
         view.renderDeviceList(trackingData.getDevice());
         view.renderDeviceDetail(trackingData.getDevice());
     }
 
     @Override
-    public void onFailTracking(String failMessage) {
+    public void onFailDataTracking(String failMessage) {
         view.showToastMessage(failMessage);
     }
 

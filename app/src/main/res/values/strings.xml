@@ -8,4 +8,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_device_detail">DeviceDetailActivity</string>
+    <string name="title_activity_main_admin">MainAdminActivity</string>
+    <string name="title_activity_form_device">FormDeviceActivity</string>
+    <string name="title_activity_tracking_log_device">TrackingLogDeviceActivity</string>
 </resources>

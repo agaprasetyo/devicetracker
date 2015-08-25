@@ -83,7 +83,7 @@ public class DeviceDetailFragment extends BaseFragment implements DeviceDetailPr
             mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement ActivityInteractionListener");
         }
     }
 

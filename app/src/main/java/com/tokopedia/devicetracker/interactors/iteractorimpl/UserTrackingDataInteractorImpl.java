@@ -1,10 +1,12 @@
-package com.tokopedia.devicetracker.ui.interactors;
+package com.tokopedia.devicetracker.interactors.iteractorimpl;
 
 import com.tokopedia.devicetracker.app.MainApp;
 import com.tokopedia.devicetracker.database.DbService;
 import com.tokopedia.devicetracker.database.model.DeviceData;
 import com.tokopedia.devicetracker.database.model.PersonData;
 import com.tokopedia.devicetracker.database.model.TrackingData;
+import com.tokopedia.devicetracker.interactors.listener.OnTrackingDataFinishedListener;
+import com.tokopedia.devicetracker.interactors.interactor.UserTrackingDataInteractor;
 
 import javax.inject.Inject;
 
@@ -31,9 +33,9 @@ public class UserTrackingDataInteractorImpl implements UserTrackingDataInteracto
         trackingData.setPerson(personData);
         trackingData.setActivity(TrackingData.ACTIVITY_BORROW);
         if (MainApp.getInstance().getDbService().getTrackingData().saveData(trackingData)) {
-            listener.onTracked(trackingData);
+            listener.onDataTracked(trackingData);
         } else {
-            listener.onFailTracking("Kesalahan Database, Ulangi lagi!");
+            listener.onFailDataTracking("Kesalahan Database, Ulangi lagi!");
         }
     }
 
@@ -47,9 +49,9 @@ public class UserTrackingDataInteractorImpl implements UserTrackingDataInteracto
         trackingData.setPerson(personData);
         trackingData.setActivity(TrackingData.ACTIVITY_RETURN);
         if (MainApp.getInstance().getDbService().getTrackingData().saveData(trackingData)) {
-            listener.onTracked(trackingData);
+            listener.onDataTracked(trackingData);
         } else {
-            listener.onFailTracking("Kesalahan Database, Ulangi lagi!");
+            listener.onFailDataTracking("Kesalahan Database, Ulangi lagi!");
         }
     }
 
@@ -68,7 +70,7 @@ public class UserTrackingDataInteractorImpl implements UserTrackingDataInteracto
         if (trackingData.getPerson().getUrl().equals(url)) {
             trackingReturnDevice(deviceData, trackingData.getPerson());
         } else {
-            listener.onFailTracking("Data Tidak sama dengan peminjam");
+            listener.onFailDataTracking("Data Tidak sama dengan peminjam");
         }
     }
 }

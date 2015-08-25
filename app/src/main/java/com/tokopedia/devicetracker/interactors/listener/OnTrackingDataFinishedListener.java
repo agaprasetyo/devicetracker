@@ -1,4 +1,4 @@
-package com.tokopedia.devicetracker.ui.interactors;
+package com.tokopedia.devicetracker.interactors.listener;
 
 import com.tokopedia.devicetracker.database.model.TrackingData;
 
@@ -7,7 +7,7 @@ import com.tokopedia.devicetracker.database.model.TrackingData;
  */
 public interface OnTrackingDataFinishedListener {
 
-    void onTracked(TrackingData trackingData);
+    void onDataTracked(TrackingData trackingData);
 
-    void onFailTracking(String failMessage);
+    void onFailDataTracking(String failMessage);
 }

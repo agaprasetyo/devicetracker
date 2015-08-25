@@ -25,6 +25,12 @@ public class PersonData implements Parcelable {
 
     }
 
+    public PersonData(int id, String url, String name) {
+        this.id = id;
+        this.url = url;
+        this.name = name;
+    }
+
     public int getId() {
         return id;
     }

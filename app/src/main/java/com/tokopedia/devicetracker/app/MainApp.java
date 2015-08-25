@@ -50,6 +50,11 @@ public class MainApp extends MultiDexApplication {
         return ((MainApp) context.getApplicationContext()).mainAppComponent;
     }
 
+    public static MainAppComponent getComponent() {
+        return  getInstance().mainAppComponent;
+    }
+
+
     private void initialDbService() {
         this.dbService = new DbService(this);
     }
