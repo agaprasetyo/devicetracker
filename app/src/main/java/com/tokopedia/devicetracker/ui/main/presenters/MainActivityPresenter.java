@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.view.MenuItem;
 
 import com.tokopedia.devicetracker.R;
 import com.tokopedia.devicetracker.database.model.DeviceData;
@@ -36,6 +37,26 @@ public class MainActivityPresenter extends Presenter {
 
     @Override
     public void pause() {
+
+    }
+
+    @Override
+    public void stop() {
+
+    }
+
+    @Override
+    public void start() {
+
+    }
+
+    @Override
+    public void optionsItemSelected(MenuItem item) {
+
+    }
+
+    @Override
+    public void activityResult(int requestCode, int resultCode, Intent data) {
 
     }
 

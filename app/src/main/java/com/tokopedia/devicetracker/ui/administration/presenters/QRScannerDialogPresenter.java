@@ -1,9 +1,13 @@
-package com.tokopedia.devicetracker.ui.administration.dialog;
+package com.tokopedia.devicetracker.ui.administration.presenters;
+
+import android.content.Intent;
+import android.view.MenuItem;
 
 import com.tokopedia.devicetracker.database.model.PersonData;
 import com.tokopedia.devicetracker.interactors.interactor.ValidationAdminInteractor;
 import com.tokopedia.devicetracker.interactors.iteractorimpl.ValidationAdminIteractorImpl;
 import com.tokopedia.devicetracker.interactors.listener.OnValidationAdminFinishedListener;
+import com.tokopedia.devicetracker.ui.administration.dialog.QRScannerValidatorAdminDialog;
 import com.tokopedia.devicetracker.ui.main.presenters.Presenter;
 
 /**
@@ -36,6 +40,26 @@ public class QRScannerDialogPresenter extends Presenter implements OnValidationA
 
     @Override
     public void pause() {
+
+    }
+
+    @Override
+    public void stop() {
+
+    }
+
+    @Override
+    public void start() {
+
+    }
+
+    @Override
+    public void optionsItemSelected(MenuItem item) {
+
+    }
+
+    @Override
+    public void activityResult(int requestCode, int resultCode, Intent data) {
 
     }
 

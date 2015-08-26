@@ -13,7 +13,7 @@ public class StringUtils {
     private static final String TAG = StringUtils.class.getSimpleName();
 
     public static String timeStringIND(long timeMilis) {
-        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd MMMM yyyy", new Locale("in_ID"));
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd MMMM yyyy HH:mm", new Locale("in_ID"));
         return sdf.format(new Date(timeMilis));
     }
 }

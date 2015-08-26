@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.tokopedia.devicetracker.R;
 import com.tokopedia.devicetracker.database.model.DeviceData;
+import com.tokopedia.devicetracker.ui.BaseActivity;
 import com.tokopedia.devicetracker.ui.BaseFragment;
 import com.tokopedia.devicetracker.ui.administration.adapter.DeviceRecyclerAdapter;
 import com.tokopedia.devicetracker.ui.administration.presenters.DeviceRecyclerAdminPresenter;
@@ -83,6 +84,17 @@ public class DeviceRecyclerAdminFragment extends BaseFragment implements DeviceR
     }
 
     @Override
+    public void onEditDeviceData(DeviceData deviceData) {
+        // startActivityForResult(presenter.createIntentUpdateDevice(getActivity(), deviceData), BaseActivity.REQUEST_EDIT_DEVICE);
+        mListener.toEditDevice(deviceData);
+    }
+
+    @Override
+    public void onDeviceLogTracking(DeviceData deviceData) {
+        mListener.toDeviceLogTracking(deviceData);
+    }
+
+    @Override
     public void setAttributeVar() {
         adapter = new DeviceRecyclerAdapter(getActivity(), this, new ArrayList<DeviceData>());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -122,9 +134,16 @@ public class DeviceRecyclerAdminFragment extends BaseFragment implements DeviceR
         adapter.deleteItemView(device);
     }
 
+    @Override
+    public void addDeviceItem(DeviceData deviceData) {
+        adapter.add(deviceData);
+    }
+
 
     public interface ActivityInteractionListener {
+        void toEditDevice(DeviceData deviceData);
 
+        void toDeviceLogTracking(DeviceData deviceData);
     }
 
 }

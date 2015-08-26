@@ -1,23 +1,21 @@
 package com.tokopedia.devicetracker.interactors.iteractorimpl;
 
 import com.tokopedia.devicetracker.app.MainApp;
-import com.tokopedia.devicetracker.database.DbService;
 import com.tokopedia.devicetracker.database.model.DeviceData;
 import com.tokopedia.devicetracker.database.model.PersonData;
 import com.tokopedia.devicetracker.database.model.TrackingData;
 import com.tokopedia.devicetracker.interactors.interactor.AdminTrackingDataInteractor;
 import com.tokopedia.devicetracker.interactors.listener.OnTrackingDataFinishedListener;
 
-import javax.inject.Inject;
-
 /**
  * Created by Angga.Prasetiyo on 25/08/2015.
  */
 public class AdminTrackingDataInteractorImpl implements AdminTrackingDataInteractor {
     private static final String TAG = AdminTrackingDataInteractorImpl.class.getSimpleName();
-    private OnTrackingDataFinishedListener listener;
 
-    public AdminTrackingDataInteractorImpl(OnTrackingDataFinishedListener listener) {
+    private OnTrackingDataFinishedListener<TrackingData, String> listener;
+
+    public AdminTrackingDataInteractorImpl(OnTrackingDataFinishedListener<TrackingData, String> listener) {
         this.listener = listener;
         MainApp.getComponent().inject(this);
     }

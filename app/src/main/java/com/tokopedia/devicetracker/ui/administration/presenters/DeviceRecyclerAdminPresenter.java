@@ -3,6 +3,7 @@ package com.tokopedia.devicetracker.ui.administration.presenters;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.view.MenuItem;
 
 import com.tokopedia.devicetracker.app.MainApp;
 import com.tokopedia.devicetracker.database.model.DeviceData;
@@ -20,7 +21,7 @@ import java.util.List;
 /**
  * Created by Angga.Prasetiyo on 25/08/2015.
  */
-public class DeviceRecyclerAdminPresenter extends Presenter implements OnTrackingDataFinishedListener {
+public class DeviceRecyclerAdminPresenter extends Presenter implements OnTrackingDataFinishedListener<TrackingData, String> {
     private static final String TAG = DeviceRecyclerAdminPresenter.class.getSimpleName();
 
     private Activity activity;
@@ -50,13 +51,33 @@ public class DeviceRecyclerAdminPresenter extends Presenter implements OnTrackin
     }
 
     @Override
-    public void onDataTracked(TrackingData trackingData) {
-        view.removeRecyclerItem(trackingData.getDevice());
+    public void stop() {
+
     }
 
     @Override
-    public void onFailDataTracking(String failMessage) {
-        view.showToastMessage(failMessage);
+    public void start() {
+
+    }
+
+    @Override
+    public void optionsItemSelected(MenuItem item) {
+
+    }
+
+    @Override
+    public void activityResult(int requestCode, int resultCode, Intent data) {
+
+    }
+
+    @Override
+    public void onDataTracked(TrackingData successResultObj) {
+        view.removeRecyclerItem(successResultObj.getDevice());
+    }
+
+    @Override
+    public void onFailDataTracking(String failedResultObj) {
+        view.showToastMessage(failedResultObj);
     }
 
     public void deleteDevice(final DeviceData deviceData) {
@@ -94,5 +115,7 @@ public class DeviceRecyclerAdminPresenter extends Presenter implements OnTrackin
         void renderRecyclerItem(DeviceData device);
 
         void removeRecyclerItem(DeviceData device);
+
+        void addDeviceItem(DeviceData deviceData);
     }
 }

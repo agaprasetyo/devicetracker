@@ -9,6 +9,7 @@ import com.tokopedia.devicetracker.database.model.PersonData;
 import com.tokopedia.devicetracker.database.model.TrackingData;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -89,4 +90,16 @@ public class TrackingDataService extends BaseService<TrackingData> {
     }
 
 
+    public List<TrackingData> getListByDevice(DeviceData deviceData) {
+        try {
+            return trackingDataIntegerDao.queryBuilder()
+                    .orderBy(DbContract.ID, false)
+                    .where()
+                    .eq(DbContract.TrackingData.DEVICE, deviceData)
+                    .query();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new ArrayList<TrackingData>();
+        }
+    }
 }

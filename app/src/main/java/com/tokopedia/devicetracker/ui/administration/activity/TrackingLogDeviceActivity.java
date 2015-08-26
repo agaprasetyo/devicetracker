@@ -1,18 +1,45 @@
 package com.tokopedia.devicetracker.ui.administration.activity;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 
 import com.tokopedia.devicetracker.R;
+import com.tokopedia.devicetracker.database.model.DeviceData;
+import com.tokopedia.devicetracker.database.model.TrackingData;
 import com.tokopedia.devicetracker.ui.BaseActivity;
+import com.tokopedia.devicetracker.ui.administration.adapter.DeviceLogRecyclerAdapter;
+import com.tokopedia.devicetracker.ui.administration.presenters.TrackingLogDevicePresenter;
 
-public class TrackingLogDeviceActivity extends BaseActivity {
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.Bind;
+
+public class TrackingLogDeviceActivity extends BaseActivity implements TrackingLogDevicePresenter.View {
+
+    public static final String EXTRA_DEVICE_DATA = "EXTRA_DEVICE_DATA";
+    @Bind(R.id.list)
+    RecyclerView recyclerView;
+
+    private TrackingLogDevicePresenter presenter;
+    private DeviceLogRecyclerAdapter adapter;
+
+    public static Intent factoryIntent(Activity activity, DeviceData deviceData) {
+        Intent intent = new Intent(activity, TrackingLogDeviceActivity.class);
+        intent.putExtra(EXTRA_DEVICE_DATA, deviceData);
+        return intent;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        presenter = new TrackingLogDevicePresenter(this, this);
+        presenter.initialize();
+        presenter.initialBundleData(getIntent().getExtras());
     }
 
     @Override
@@ -20,25 +47,29 @@ public class TrackingLogDeviceActivity extends BaseActivity {
         return R.layout.activity_tracking_log_device;
     }
 
+
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_tracking_log_device, menu);
-        return true;
+    public void setAttributeVar() {
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new DeviceLogRecyclerAdapter(this, new ArrayList<TrackingData>());
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+    public void repopulateRecycler() {
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+    }
+
+    @Override
+    public void populateRecycler(List<TrackingData> successResultObj) {
+        for (TrackingData trackingData : successResultObj) {
+            adapter.add(trackingData);
+            adapter.notifyDataSetChanged();
         }
+    }
 
-        return super.onOptionsItemSelected(item);
+    @Override
+    public void showToastMessage(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 }

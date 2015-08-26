@@ -6,4 +6,5 @@ package com.tokopedia.devicetracker.interactors.interactor;
 public interface ValidationAdminInteractor {
 
     void validationQRResult(String qrResult);
+
 }

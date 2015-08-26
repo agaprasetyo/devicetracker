@@ -7,6 +7,7 @@ import android.os.Bundle;
 import com.google.zxing.Result;
 import com.tokopedia.devicetracker.R;
 import com.tokopedia.devicetracker.database.model.PersonData;
+import com.tokopedia.devicetracker.ui.administration.presenters.QRScannerDialogPresenter;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

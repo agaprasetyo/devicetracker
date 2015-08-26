@@ -1,5 +1,8 @@
 package com.tokopedia.devicetracker.ui.main.presenters;
 
+import android.content.Intent;
+import android.view.MenuItem;
+
 import com.tokopedia.devicetracker.database.model.DeviceData;
 import com.tokopedia.devicetracker.database.model.PersonData;
 import com.tokopedia.devicetracker.database.model.TrackingData;
@@ -13,7 +16,7 @@ import com.tokopedia.devicetracker.interactors.iteractorimpl.UserTrackingDataInt
 /**
  * Created by Angga.Prasetiyo on 18/08/2015.
  */
-public class DeviceDetailPresenter extends Presenter implements OnRequestPersonDataFinishedListener, OnTrackingDataFinishedListener {
+public class DeviceDetailPresenter extends Presenter implements OnRequestPersonDataFinishedListener, OnTrackingDataFinishedListener<TrackingData, String> {
     private static final String TAG = DeviceDetailPresenter.class.getSimpleName();
 
     private View view;
@@ -43,6 +46,26 @@ public class DeviceDetailPresenter extends Presenter implements OnRequestPersonD
     @Override
     public void pause() {
         view.stopQRCodeScanner();
+    }
+
+    @Override
+    public void stop() {
+
+    }
+
+    @Override
+    public void start() {
+
+    }
+
+    @Override
+    public void optionsItemSelected(MenuItem item) {
+
+    }
+
+    @Override
+    public void activityResult(int requestCode, int resultCode, Intent data) {
+
     }
 
     @Override
@@ -126,14 +149,14 @@ public class DeviceDetailPresenter extends Presenter implements OnRequestPersonD
 
 
     @Override
-    public void onDataTracked(TrackingData trackingData) {
-        view.renderDeviceList(trackingData.getDevice());
-        view.renderDeviceDetail(trackingData.getDevice());
+    public void onDataTracked(TrackingData successResultObj) {
+        view.renderDeviceList(successResultObj.getDevice());
+        view.renderDeviceDetail(successResultObj.getDevice());
     }
 
     @Override
-    public void onFailDataTracking(String failMessage) {
-        view.showToastMessage(failMessage);
+    public void onFailDataTracking(String failedResultObj) {
+        view.showToastMessage(failedResultObj);
     }
 
     public interface View {

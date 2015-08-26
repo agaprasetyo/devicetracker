@@ -9,4 +9,9 @@
         android:id="@+id/action_delete"
         android:orderInCategory="100"
         android:title="Delete" />
+
+    <item
+        android:id="@+id/action_log"
+        android:orderInCategory="100"
+        android:title="Log Data" />
 </menu>

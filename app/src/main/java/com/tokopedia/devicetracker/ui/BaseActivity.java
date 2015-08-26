@@ -17,6 +17,10 @@ import butterknife.ButterKnife;
  */
 public abstract class BaseActivity extends AppCompatActivity {
     private static final String TAG = BaseActivity.class.getSimpleName();
+    public static final int REQUEST_ADD_DEVICE = 1000;
+    public static final int REQUEST_EDIT_DEVICE = 1001;
+    public static final int REQUEST_CAMERA = 1002;
+    public static final int REQUEST_LOG_DEVICE = 1003;
 
     @Inject
     DbService dbService;

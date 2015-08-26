@@ -15,10 +15,9 @@ import javax.inject.Inject;
  */
 public class UserTrackingDataInteractorImpl implements UserTrackingDataInteractor {
     private static final String TAG = UserTrackingDataInteractorImpl.class.getSimpleName();
-    private OnTrackingDataFinishedListener listener;
-    @Inject DbService dbService;
+    private OnTrackingDataFinishedListener<TrackingData, String> listener;
 
-    public UserTrackingDataInteractorImpl(OnTrackingDataFinishedListener listener) {
+    public UserTrackingDataInteractorImpl(OnTrackingDataFinishedListener<TrackingData, String> listener) {
         this.listener = listener;
 
     }

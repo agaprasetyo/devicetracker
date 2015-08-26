@@ -44,6 +44,7 @@ public class DbHelper extends OrmLiteSqliteOpenHelper {
     }
 
     private void fillData() {
+        PersonData personData = new PersonData(468, "https://www.tokopedia.com/team/468", "Angga Preasetiyo");
         for (int i = 0; i < 20; i++) {
             DeviceData deviceData = new DeviceData();
             deviceData.setId(i + 1);
@@ -53,6 +54,12 @@ public class DbHelper extends OrmLiteSqliteOpenHelper {
             deviceData.setDevicePicPath("picture/image1.jpg");
             deviceData.setDeviceDesc("Description " + String.valueOf(i + 1));
             MainApp.getInstance().getDbService().getDeviceData().saveData(deviceData);
+            MainApp.getInstance().getDbService().getPersonData().saveData(personData);
+            TrackingData trackingData = new TrackingData();
+            trackingData.setDevice(deviceData);
+            trackingData.setPerson(personData);
+            trackingData.setActivity(TrackingData.ACTIVITY_ADD_DEVICE);
+            MainApp.getInstance().getDbService().getTrackingData().saveData(trackingData);
         }
     }
 

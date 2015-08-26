@@ -92,6 +92,10 @@ public class TrackingData implements Parcelable {
                 + StringUtils.timeStringIND(this.time);
     }
 
+    public String timeString(){
+        return  StringUtils.timeStringIND(this.time);
+    }
+
     @Override
     public int describeContents() {
         return 0;

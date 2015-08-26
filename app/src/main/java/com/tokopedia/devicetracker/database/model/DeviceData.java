@@ -31,6 +31,7 @@ public class DeviceData extends Device {
     public DeviceData() {
     }
 
+
     public DeviceData(Device data) {
         this.deviceName = data.getDeviceName();
         this.deviceDesc = data.getDeviceDesc();

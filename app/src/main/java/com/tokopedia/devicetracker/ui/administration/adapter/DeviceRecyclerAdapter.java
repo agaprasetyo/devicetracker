@@ -36,7 +36,6 @@ public class DeviceRecyclerAdapter extends RecyclerView.Adapter<DeviceRecyclerAd
     private OnInteractionListener onInteractionListener;
     private Activity activity;
 
-
     private MainApp application;
 
     public DeviceRecyclerAdapter(Activity activity, OnInteractionListener listener, List<DeviceData> deviceDataList) {
@@ -62,7 +61,7 @@ public class DeviceRecyclerAdapter extends RecyclerView.Adapter<DeviceRecyclerAd
         holder.tvName.setText(deviceDataList.get(position).getDeviceName().toUpperCase());
         holder.tvModel.setText(deviceDataList.get(position).getDeviceModel().toUpperCase());
         holder.tvNumber.setText(String.valueOf(deviceDataList.get(position).getId()).toUpperCase());
-        ImageLoader.getInstance().displayImage("assets://" + deviceDataList.get(position).getDevicePicPath(), holder.ivPic, getDisplayImage());
+        ImageLoader.getInstance().displayImage("file://" + deviceDataList.get(position).getDevicePicPath(), holder.ivPic, getDisplayImage());
     }
 
     @Override
@@ -105,7 +104,6 @@ public class DeviceRecyclerAdapter extends RecyclerView.Adapter<DeviceRecyclerAd
         @Bind(R.id.iv_1)
         ImageView ivPopUp;
 
-
         public ViewHolder(View itemView) {
             super(itemView);
             itemView.setBackgroundResource(R.drawable.bg_available_device);
@@ -122,9 +120,13 @@ public class DeviceRecyclerAdapter extends RecyclerView.Adapter<DeviceRecyclerAd
                         public boolean onMenuItemClick(MenuItem item) {
                             switch (item.getItemId()) {
                                 case R.id.action_edit:
+                                    onInteractionListener.onEditDeviceData(deviceDataList.get(getAdapterPosition()));
                                     break;
                                 case R.id.action_delete:
                                     onInteractionListener.onDeleteDeviceData(deviceDataList.get(getAdapterPosition()));
+                                    break;
+                                case R.id.action_log:
+                                    onInteractionListener.onDeviceLogTracking(deviceDataList.get(getAdapterPosition()));
                                     break;
                             }
                             return true;
@@ -168,9 +170,14 @@ public class DeviceRecyclerAdapter extends RecyclerView.Adapter<DeviceRecyclerAd
     }
 
     public interface OnInteractionListener {
+
         void onDeviceListItemClicked(int position);
 
         void onDeleteDeviceData(DeviceData deviceData);
+
+        void onEditDeviceData(DeviceData deviceData);
+
+        void onDeviceLogTracking(DeviceData deviceData);
     }
 }
 
