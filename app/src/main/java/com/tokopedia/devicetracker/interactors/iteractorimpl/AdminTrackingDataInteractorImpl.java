@@ -17,7 +17,6 @@ public class AdminTrackingDataInteractorImpl implements AdminTrackingDataInterac
 
     public AdminTrackingDataInteractorImpl(OnTrackingDataFinishedListener<TrackingData, String> listener) {
         this.listener = listener;
-        MainApp.getComponent().inject(this);
     }
 
     @Override

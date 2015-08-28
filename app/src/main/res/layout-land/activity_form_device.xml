@@ -1,0 +1,75 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="50sp"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.tokopedia.devicetracker.ui.mainadmin.activity.FormDeviceActivity">
+
+    <ImageView
+        android:id="@+id/iv_preview"
+        android:layout_width="300sp"
+        android:layout_height="300sp"
+        android:scaleType="centerCrop"
+        tools:ignore="ContentDescription" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/btn_save"
+        android:layout_toEndOf="@+id/iv_preview"
+        android:orientation="vertical"
+        android:paddingEnd="@null"
+        android:paddingStart="20sp">
+
+        <EditText
+            android:id="@+id/et_device_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="ID/Nomor Device"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/et_device_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/et_device_id"
+            android:hint="Nama Device"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/et_device_model"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/et_device_name"
+            android:hint="Model"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/et_device_desc"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/et_device_model"
+            android:hint="Deskripsi"
+            android:lines="3"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/btn_save"
+        android:layout_width="300sp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@color/primary"
+        android:text="SIMPAN"
+        android:textColor="@color/white"
+        android:textSize="30sp" />
+
+
+</RelativeLayout>

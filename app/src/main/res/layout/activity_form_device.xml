@@ -6,34 +6,38 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.tokopedia.devicetracker.ui.administration.activity.FormDeviceActivity">
+    tools:context="com.tokopedia.devicetracker.ui.mainadmin.activity.FormDeviceActivity">
 
     <ImageView
         android:id="@+id/iv_preview"
         android:layout_width="300sp"
         android:layout_height="300sp"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:scaleType="centerCrop" />
 
     <EditText
         android:id="@+id/et_device_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/iv_preview"
-        android:hint="ID/Nomor Device" />
+        android:hint="ID/Nomor Device"
+        android:textSize="20sp" />
 
     <EditText
         android:id="@+id/et_device_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/et_device_id"
-        android:hint="Nama Device" />
+        android:hint="Nama Device"
+        android:textSize="20sp" />
 
     <EditText
         android:id="@+id/et_device_model"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/et_device_name"
-        android:hint="Model" />
+        android:hint="Model"
+        android:textSize="20sp" />
 
     <EditText
         android:id="@+id/et_device_desc"
@@ -41,7 +45,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/et_device_model"
         android:hint="Deskripsi"
-        android:lines="3" />
+        android:lines="3"
+        android:textSize="20sp" />
 
     <Button
         android:id="@+id/btn_save"

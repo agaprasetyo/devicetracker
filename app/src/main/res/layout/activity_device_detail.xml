@@ -2,11 +2,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.tokopedia.devicetracker.ui.main.activity.DeviceDetailActivity">
+    tools:context="com.tokopedia.devicetracker.ui.mainuser.activity.DeviceDetailActivity">
 
     <fragment
         android:id="@+id/container_detail"
-        android:name="com.tokopedia.devicetracker.ui.main.fragment.DeviceDetailFragment"
+        android:name="com.tokopedia.devicetracker.ui.mainuser.fragment.DeviceDetailFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_detail" />
